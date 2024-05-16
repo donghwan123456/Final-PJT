@@ -146,3 +146,25 @@ def top_rate(request):
     # print(product)
     serializers_product = DepositProductsSerializer(product)
     return Response({'deposit_products':serializers_product.data, 'options':[serializers_option.data]})
+
+
+@api_view(['GET'])
+def sort_rate(request):
+    # intr_rate2 필드를 기준으로 DepositOptions를 정렬
+    deposit_options = DepositOptions.objects.all().order_by('intr_rate2')
+    serializers_option = DepositOptionsSerializer(deposit_options, many=True)
+
+    # 정렬된 DepositOptions 중 각각에 해당하는 DepositProducts를 가져와서 직렬화
+    products = [option.product for option in deposit_options]
+    serializers_product = DepositProductsSerializer(products, many=True)
+
+
+    # DepositProducts와 DepositOptions를 번갈아가며 출력
+    output_data = []
+    for product, option in zip(serializers_product.data, serializers_option.data):
+        output_data.append(product)
+        output_data.append(option)
+
+    return Response({'data': output_data})
+
+

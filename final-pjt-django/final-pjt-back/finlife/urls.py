@@ -9,4 +9,5 @@ urlpatterns = [
     path('deposit_products/', views.deposit_products, name="deposit_products"),
     path('deposit_product_options/<str:fin_prdt_cd>/', views.deposit_product_options, name="deposit_product_options"),
     path('deposit_products/top_rate/', views.top_rate, name="top_rate"),
+    path('deposit_products/sort_rate/', views.sort_rate, name="sort_rate"),
 ]
