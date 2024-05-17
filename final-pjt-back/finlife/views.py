@@ -11,6 +11,7 @@ from .models import DepositProducts, DepositOptions
 BASE_URL = 'http://finlife.fss.or.kr/finlifeapi/'
 # Create your views here.
 
+bank = []
 @api_view(['GET'])
 def index(request):
     URL = BASE_URL + 'depositProductsSearch.json'
@@ -19,9 +20,31 @@ def index(request):
         'topFinGrpNo' : '020000',
         'pageNo': 1
     }
-    
     response = requests.get(URL, params=params).json()
-    return JsonResponse({ 'response': response })
+
+    result = response.get('result')
+    baseList = result['baseList']
+    optionList = result['optionList']
+
+    for data in baseList:
+        if data['kor_co_nm'] not in bank:
+            bank.append(data['kor_co_nm'])
+    context = {
+        'bank': bank
+    }
+    return render(request, 'finlife/index.html', context)
+
+# @api_view(['GET'])
+# def index(request):
+#     URL = BASE_URL + 'depositProductsSearch.json'
+#     params = {
+#         'auth': settings.API_KEY,
+#         'topFinGrpNo' : '020000',
+#         'pageNo': 1
+#     }
+    
+#     response = requests.get(URL, params=params).json()
+#     return JsonResponse({ 'response': response })
 
 
 @api_view(['GET'])
@@ -165,7 +188,31 @@ def sort_rate(request):
 
 
 @api_view(['GET'])
-def filter(request, kor_co_nm):
-    depositProducts = DepositProducts.objects.filter(kor_co_nm=kor_co_nm)
-    serializers = DepositProductsSerializer(depositProducts, many=True)
-    return Response(serializers.data)
+def filter(request):
+    kor_co_nm = request.GET.get('bank')
+
+    # DepositProducts 필터링
+    deposit_products = DepositProducts.objects.filter(kor_co_nm=kor_co_nm)
+    serializers_product = DepositProductsSerializer(deposit_products, many=True)
+
+    # DepositProducts에 연결된 DepositOptions 필터링
+    options = DepositOptions.objects.filter(product__in=deposit_products)
+    serializers_option = DepositOptionsSerializer(options, many=True)
+    # serializers_option = serializers_option.get('kor_co_nm')
+
+    # DepositProducts와 DepositOptions를 번갈아가며 출력
+    product_data = []
+    option_data = []
+    for product in serializers_product.data:
+        product_data.append(product)
+        product_options = [option for option in serializers_option.data if option['product'] == product['id'] and option['save_trm'] >= 6 and option['save_trm'] <= 36]
+        option_data.append(product_options)
+
+    context = {
+        'deposit_products': product_data,
+        'deposit_options' : option_data,
+        # 'deposit_products': serializers_product.data,
+        'selected_bank': kor_co_nm
+    }
+    print(option_data[0])
+    return render(request, 'finlife/filter.html', context)

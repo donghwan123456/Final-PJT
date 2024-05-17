@@ -1,0 +1,44 @@
+{% extends "basefin.html" %}
+
+{% block content %}
+<h1>Bank: {{ selected_bank }}</h1>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">금융회사명</th>
+        <th scope="col">상품명</th>
+        <th scope="col">6개월</th>
+        <th scope="col">12개월</th>
+        <th scope="col">24개월</th>
+        <th scope="col">36개월</th>
+      </tr>
+    </thead>
+    
+    <tbody>
+      {% for product in deposit_products %}
+      <tr>
+        
+        <th scope="row">{{ forloop.counter }}</th>
+        <td>{{product.kor_co_nm}}</td>
+        <td>{{product.fin_prdt_nm}}</td>
+
+        {% for options in deposit_options %}
+
+            <td>{{options.intr_rate}}</td>
+
+        {% endfor %}
+        
+      </tr>
+      {% endfor %}
+    </tbody>
+    
+  </table>
+    {% comment %} <ul>
+      {% for product in deposit_products %}
+          <li>{{ product }}</li> <!-- 필요한 정보를 여기에 출력하세요 -->
+      {% endfor %}
+    </ul>  {% endcomment %}
+<a href="{% url 'finlife:index' %}">Go back to bank selection</a>
+
+{% endblock content %}
