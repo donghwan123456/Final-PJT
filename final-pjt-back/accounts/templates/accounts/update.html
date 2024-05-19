@@ -10,6 +10,9 @@
   <form action="{% url "accounts:update" %}" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
+    <div>
+      <a href="{% url 'accounts:change_password' %}">비밀번호 수정하기</a>
+    </div>
     <input type="submit">
   </form>
 </body>

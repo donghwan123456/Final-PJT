@@ -39,13 +39,11 @@ def signup(request):
 
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-        # form = UserForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('articles:index')
     else:
         form = CustomUserCreationForm()
-        # form = UserForm()
     context = {
         'form': form,
     }
@@ -69,12 +67,13 @@ def update(request):
         form = CustomUserChangeForm(instance=request.user)
     context = {
         'form': form,
+        # 'user_pk': request.user.pk,  # 현재 로그인된 사용자의 pk를 컨텍스트에 추가
     }
     return render(request, 'accounts/update.html', context)
 
 
 @login_required
-def change_password(request, user_pk):
+def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -98,18 +97,18 @@ def profile(request, username):
     return render(request, 'accounts/profile.html', context)
 
 
-# @login_required
-# def follow(request, user_pk):
-#     me = request.user
-#     you = get_user_model().objects.get(pk=user_pk)
+@login_required
+def follow(request, user_pk):
+    me = request.user
+    you = get_user_model().objects.get(pk=user_pk)
 
-#     # 자기 자신을 팔로우 할 수 없음
-#     if me != you:
-#         # 요청하는 사람이 상대방의 팔로워 목록에 있는지 없는지
-#         if me in you.followers.all():
-#             you.followers.remove(me)
-#             # me.followings.remove(you)
-#         else:
-#             you.followers.add(me)
-#             # me.followings.add(you)
-#     return redirect('accounts:profile', you.username)
+    # 자기 자신을 팔로우 할 수 없음
+    if me != you:
+        # 요청하는 사람이 상대방의 팔로워 목록에 있는지 없는지
+        if me in you.followers.all():
+            you.followers.remove(me)
+            # me.followings.remove(you)
+        else:
+            you.followers.add(me)
+            # me.followings.add(you)
+    return redirect('accounts:profile', you.username)

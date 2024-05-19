@@ -1,38 +1,115 @@
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework import status
-
-# permission Decorators
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
-
-from django.shortcuts import get_object_or_404, get_list_or_404
-
-from .serializers import ArticleListSerializer, ArticleSerializer
-from .models import Article
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from .models import Article, Comment
+from .forms import ArticleForm, CommentForm
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-def article_list(request):
-    if request.method == 'GET':
-        articles = get_list_or_404(Article)
-        serializer = ArticleListSerializer(articles, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        serializer = ArticleSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            # serializer.save()
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+# Create your views here.
+def index(request):
+    articles = Article.objects.all()
+    context = {
+        'articles': articles,
+    }
+    return render(request, 'articles/index.html', context)
 
 
-@api_view(['GET'])
-def article_detail(request, article_pk):
-    article = get_object_or_404(Article, pk=article_pk)
+def detail(request, pk):
+    article = Article.objects.get(pk=pk)
+    comments = article.comment_set.all()
+    comment_form = CommentForm()
+    context = {
+        'article': article,
+        'comments': comments,
+        'comment_form': comment_form,
+    }
+    return render(request, 'articles/detail.html', context)
 
-    if request.method == 'GET':
-        serializer = ArticleSerializer(article)
-        print(serializer.data)
-        return Response(serializer.data)
+
+@login_required
+def create(request):
+    if request.method == 'POST':
+        form = ArticleForm(request.POST)
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.user = request.user
+            article.save()
+            return redirect('articles:detail', article.pk)
+    else:
+        form = ArticleForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'articles/create.html', context)
+
+
+@login_required
+def delete(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.user == article.user:
+        article.delete()
+    return redirect('articles:index')
+
+
+@login_required
+def update(request, pk):
+    article = Article.objects.get(pk=pk)
+    if request.user == article.user:
+        if request.method == 'POST':
+            form = ArticleForm(request.POST, instance=article)
+            if form.is_valid():
+                form.save()
+                return redirect('articles:detail', article.pk)
+        else:
+            form = ArticleForm(instance=article)
+    else:
+        return redirect('articles:index')
+    context = {
+        'form': form,
+        'article': article,
+    }
+    return render(request, 'articles/update.html', context)
+
+
+@login_required
+def comments_create(request, pk):
+    article = Article.objects.get(pk=pk)
+    comments = article.comment_set.all()
+    comment_form = CommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.article = article
+        comment.user = request.user
+        comment.save()
+        return redirect('articles:detail', article.pk)
+    context = {
+        'comment_form': comment_form,
+        'article': article,
+        'comments': comments,
+    }
+    return render(request, 'articles/detail.html', context)
+
+
+@login_required
+def comments_delete(request, article_pk, comment_pk):
+    comment = Comment.objects.get(pk=comment_pk)
+    if request.user == comment.user:
+        comment.delete()
+    return redirect('articles:detail', article_pk)
+
+
+@login_required
+def likes(request, article_pk):
+    article = Article.objects.get(pk=article_pk)
+    if request.user in article.like_users.all():
+        article.like_users.remove(request.user)
+        is_liked = False
+    else:
+        article.like_users.add(request.user)
+        is_liked = True
+    context = {
+        'is_liked': is_liked,
+        'liked_count': article.like_users.count(),
+    }
+    return JsonResponse(context)
+    # return redirect('articles:index')

@@ -214,5 +214,5 @@ def filter(request):
         # 'deposit_products': serializers_product.data,
         'selected_bank': kor_co_nm
     }
-    print(option_data[0])
+    # print(option_data[0])
     return render(request, 'finlife/filter.html', context)
