@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>주변 은행 찾기</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+       .container {
+            display: flex;
+            height: 100vh;
+        }
+       .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .sidebar h2, .sidebar p {
+            margin: 0;
+            padding: 10px 5px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 5px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        .sidebar ul li a:hover {
+            background-color: #555;
+        }
+        .sidebar i {
+            margin-right: 10px;
+        }
+       .content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        #map {
+            width: 100%;
+            height: calc(100vh - 40px);
+        }
+    </style>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6c8aa4e58569724bbf166e436ae9b689&libraries=services"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>MONIMATE</h2>
+            <p>메뉴</p>
+            <ul>
+                <li><a href="#"><i class="fa fa-line-chart"></i>금융상품비교</a></li>
+                <li><a href="#"><i class="fa fa-usd"></i>환율 계산기</a></li>
+                <li><a href="#"><i class="fa fa-robot"></i>AI 상품 추천</a></li>
+                <li><a href="#"><i class="fa fa-user-circle"></i>나의 투자 성향 알아보기</a></li>
+                <li><a href="#"><i class="fa fa-bullhorn"></i>공지사항</a></li>
+                <li><a href="#"><i class="fa fa-comments"></i>게시판</a></li>
+                <li><a href="#"><i class="fa fa-sign-in"></i>로그인</a></li>
+                <li><a href="#"><i class="fa fa-sign-out"></i>로그아웃</a></li>
+                <li><a href="#"><i class="fa fa-user-plus"></i>회원가입</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <div id="map"></div>
+            <button onclick="은행_검색_근처()">주변 은행 찾기</button>
+        </div>
+    </div>
+
+    <script>
+        var map, ps, infowindow;
+
+        function initMap() {
+            var container = document.getElementById('map');
+            var options = {
+                center: new kakao.maps.LatLng(33.450701, 126.570667),
+                level: 3
+            };
+            map = new kakao.maps.Map(container, options);
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude,
+                        lon = position.coords.longitude;
+
+                    var locPosition = new kakao.maps.LatLng(lat, lon),
+                        message = '<div style="padding:5px;">현재 위치</div>';
+
+                    displayMarker(locPosition, message);
+                    map.setCenter(locPosition);
+                });
+            } else {
+                var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),
+                    message = 'geolocation을 사용할 수 없어요..';
+                displayMarker(locPosition, message);
+            }
+        }
+
+        function displayMarker(locPosition, message) {
+            var marker = new kakao.maps.Marker({
+                map: map,
+                position: locPosition
+            });
+
+            var iwContent = message,
+                iwRemoveable = true;
+
+            infowindow = new kakao.maps.InfoWindow({
+                content: iwContent,
+                removable: iwRemoveable
+            });
+            infowindow.open(map, marker);
+        }
+
+        function 은행_검색_근처() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var lat = position.coords.latitude,
+                        lon = position.coords.longitude;
+
+                    var locPosition = new kakao.maps.LatLng(lat, lon),
+                        message = '<div style="padding:5px;">현재 위치</div>';
+
+                    displayMarker(locPosition, message);
+                    map.setCenter(locPosition);
+
+                    var ps = new kakao.maps.services.Places();
+                    ps.categorySearch('BK9', 은행_마커_표시, { location: locPosition, radius: 5000 });
+                });
+            } else {
+                console.log("이 브라우저에서는 Geolocation을 지원하지 않습니다.");
+            }
+        }
+
+        function 은행_마커_표시(results, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    은행_마커_표시_함수(results[i]);
+                }
+            } else {
+                console.error("은행 위치 정보를 가져오는 데 실패했습니다.");
+            }
+        }
+
+        function 은행_마커_표시_함수(place) {
+            var placePosition = new kakao.maps.LatLng(place.y, place.x),
+                marker = new kakao.maps.Marker({
+                    map: map,
+                    position: placePosition
+                });
+
+            kakao.maps.event.addListener(marker, 'click', function() {
+                infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+                infowindow.open(map, marker);
+            });
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'nav.css' %}" >
+  <style>
+    
+</style>
+  {% block style %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'nav.css' %}" >
+  {% endblock style %}
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>MONIMATE</h2>
+            <p>메뉴</p>
+            <ul>
+                <li><a href="{% url 'finlife:index' %}"><i class="fa fa-line-chart"></i>금융상품비교</a></li>
+                <li><a href="#"><i class="fa fa-usd"></i>환율 계산기</a></li>
+                <li><a href="#"><i class="fa fa-robot"></i>AI 상품 추천</a></li>
+                <li><a href="#"><i class="fa fa-user-circle"></i>나의 투자 성향 알아보기</a></li>
+                <li><a href="#"><i class="fa fa-bullhorn"></i>공지사항</a></li>
+                <li><a href="{% url 'articles:index' %}"><i class="fa fa-comments"></i>게시판</a></li>
+                <li><a href="{% url 'accounts:login' %}"><i class="fa fa-sign-in"></i>로그인</a></li>
+                <li><a href="{% url "accounts:logout" %}"><i class="fa fa-sign-out"></i>로그아웃</a></li>
+                <li><a href="{% url 'accounts:signup' %}"><i class="fa fa-user-plus"></i>회원가입</a></li>
+            </ul>
+        </div>
+        {% comment %} <div class="content"> {% endcomment %}
+        <div style=padding-left:10px>
+        {% block content %}
+        {% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>

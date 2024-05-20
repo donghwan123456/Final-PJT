@@ -1,0 +1,14 @@
+{% extends "basefin.html" %}
+
+{% block content %}
+<form action="{% url 'finlife:filter' %}" method="get">
+  <label for="lang">은행을 선택하세요</label>
+  <select name="bank" id="bk">
+    <option value="all">전체</option>
+    {% for bank_name in bank %}
+      <option value={{ bank_name }}>{{ bank_name }}</option>
+    {% endfor %}
+  </select>
+  <input type="submit" value="Submit" />
+</form>
+{% endblock content %}
