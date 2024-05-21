@@ -4,7 +4,6 @@ from . import views
 app_name = "finlife"
 urlpatterns = [
     path('', views.index, name="index"),
-    path('save/', views.save_deposit_products, name="save_deposit_products"),
     path('deposit_products/', views.deposit_products, name="deposit_products"),
     path('deposit_product_options/<str:fin_prdt_cd>/', views.deposit_product_options, name="deposit_product_options"),
     path('top_rate/', views.top_rate, name="top_rate"),

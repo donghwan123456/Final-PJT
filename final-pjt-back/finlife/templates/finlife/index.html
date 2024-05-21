@@ -2,13 +2,23 @@
 
 {% block search_form %}
 <form action="{% url 'finlife:filter' %}" method="get">
-  <label for="lang">은행을 선택하세요</label>
-  <select name="bank" id="bk">
+  <div>
+    <label for="deposit">예금</label>
+    <input type="radio" id="deposit" name="product_type" value="deposit" onchange="updateBankOptions()">
+  </div>
+  <div>
+    <label for="saving">적금</label>
+    <input type="radio" id="saving" name="product_type" value="saving" onchange="updateBankOptions()">
+  </div>
+
+  <label for="bank">은행을 선택하세요</label>
+  <select name="bank" id="bank">
     <option value="all">전체</option>
-    {% for bank_name in bank %}
-      <option value={{ bank_name }}>{{ bank_name }}</option>
+    {% for bank_name in bank_deposit %}
+      <option value="{{ bank_name }}">{{ bank_name }}</option>
     {% endfor %}
   </select>
+
   <input type="submit" value="Submit" />
 </form>
 {% endblock search_form %}

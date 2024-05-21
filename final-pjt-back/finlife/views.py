@@ -6,121 +6,127 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import DepositProductsSerializer, DepositOptionsSerializer
 from .models import DepositProducts, DepositOptions
+from .serializers import SavingProductsSerializer, SavingOptionsSerializer
+from .models import SavingProducts, SavingOptions
+# import pandas as pd
 
 # API_key = settings.FIN_API_KEY
 BASE_URL = 'http://finlife.fss.or.kr/finlifeapi/'
 # Create your views here.
 
-bank = []
+bank_deposit = []
+bank_saving = []
 @api_view(['GET'])
-def index(request):
-    URL = BASE_URL + 'depositProductsSearch.json'
+def index(request): # DB에 저장기능 통합
+    URL_deposit = BASE_URL + 'depositProductsSearch.json'
+    URL_saving = BASE_URL + 'savingProductsSearch.json'
     params = {
         'auth': settings.API_KEY,
         'topFinGrpNo' : '020000',
         'pageNo': 1
     }
-    response = requests.get(URL, params=params).json()
+    response_deposit = requests.get(URL_deposit, params=params).json()
+    response_saving = requests.get(URL_saving, params=params).json()
 
-    result = response.get('result')
-    baseList = result['baseList']
-    optionList = result['optionList']
+    result_deposit = response_deposit.get('result')
+    baseList_deposit = result_deposit['baseList']
+    optionList_deposit = result_deposit['optionList']
 
-    for data in baseList:
-        if data['kor_co_nm'] not in bank:
-            bank.append(data['kor_co_nm'])
-    context = {
-        'bank': bank
-    }
-    return render(request, 'finlife/index.html', context)
+    result_saving = response_saving.get('result')
+    baseList_saving = result_saving['baseList']
+    optionList_saving = result_saving['optionList']
 
-# @api_view(['GET'])
-# def index(request):
-#     URL = BASE_URL + 'depositProductsSearch.json'
-#     params = {
-#         'auth': settings.API_KEY,
-#         'topFinGrpNo' : '020000',
-#         'pageNo': 1
-#     }
-    
-#     response = requests.get(URL, params=params).json()
-#     return JsonResponse({ 'response': response })
+    # df_base = pd.DataFrame(baseList)
+    # df_option = pd.DataFrame(optionList)
+    # df_option.fillna(-1, inplace=True)
+
+    def fill_missing(data, default_value=-1):
+        return {k: (v if v is not None else default_value) for k, v in data.items()}
+
+    # baseList 예금 처리
+    for base_data in baseList_deposit:
+        base_data = fill_missing(base_data)  # 결측값 처리
+        fin_prdt_cd = base_data['fin_prdt_cd']
+
+        # 중복 체크: 이미 데이터베이스에 있는지 확인
+        if not DepositProducts.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+            serializer = DepositProductsSerializer(data=base_data)
+            if serializer.is_valid(raise_exception=True):
+                product = serializer.save()
+            # print('save!')
 
 
-@api_view(['GET'])
-def save_deposit_products(request):
-    URL = BASE_URL + 'depositProductsSearch.json'
-    params = {
-        'auth': settings.API_KEY,
-        'topFinGrpNo' : '020000',
-        'pageNo': 1
-    }
-    response = requests.get(URL, params=params).json()
+    # optionList 예금 처리
+    for option_data in optionList_deposit:
+        option_data = fill_missing(option_data)  # 결측값 처리
+        fin_prdt_cd = option_data['fin_prdt_cd']
 
-    result = response.get('result')
-    baseList = result['baseList']
-    optionList = result['optionList']
-    
-
-    for li in baseList:
-        fin_prdt_cd = li.get('fin_prdt_cd')
-        kor_co_nm = li.get('kor_co_nm')
-        fin_prdt_nm = li.get('fin_prdt_nm')
-        etc_note = li.get('etc_note')
-        join_deny = li.get('join_deny')
-        join_member = li.get('join_member')
-        join_way = li.get('join_way')
-        spcl_cnd = li.get('spcl_cnd')
-
-        save_data = {
-            'fin_prdt_cd': fin_prdt_cd,
-            'kor_co_nm': kor_co_nm,
-            'fin_prdt_nm': fin_prdt_nm,
-            'etc_note': etc_note,
-            'join_deny': join_deny,
-            'join_member': join_member,
-            'join_way': join_way,
-            'spcl_cnd': spcl_cnd,
-        }
-
-        for k,v in save_data.items():
-            if not v: # 값이 비어있으면 -1 할당
-                save_data[k] = -1 
-
-        serializer = DepositProductsSerializer(data=save_data)
-        # 유효성 검증
-        if serializer.is_valid(raise_exception=True):
-            # 유효하다면, 저장
-            serializer.save()
-    
-    for li in optionList:
-        product = li.get('product')
-        fin_prdt_cd = li.get('fin_prdt_cd')
-        intr_rate_type_nm = li.get('intr_rate_type_nm')
-        intr_rate = li.get('intr_rate')
-        intr_rate2 = li.get('intr_rate2')
-        save_trm = li.get('save_trm')
-
-        save_data = {
-            'product': product,
-            'fin_prdt_cd': fin_prdt_cd,
-            'intr_rate_type_nm': intr_rate_type_nm,
-            'intr_rate': intr_rate,
-            'intr_rate2': intr_rate2,
-            'save_trm': save_trm,
-        }
-        for k,v in save_data.items():
-            if not v: # 값이 비어있으면 -1 할당
-                save_data[k] = -1 
-
-        serializer = DepositOptionsSerializer(data=save_data)
-        # 유효성 검증
-        if serializer.is_valid(raise_exception=True):
-            # 유효하다면, 저장
+        # 중복 체크: 이미 데이터베이스에 있는지 확인
+        if DepositProducts.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+            product = DepositProducts.objects.get(fin_prdt_cd=fin_prdt_cd)
             
-            serializer.save(product = DepositProducts.objects.get(fin_prdt_cd=li['fin_prdt_cd']))
+            # 옵션이 이미 존재하는지 확인
+            if not DepositOptions.objects.filter(
+                product=product,
+                intr_rate_type_nm=option_data['intr_rate_type_nm'],
+                intr_rate=option_data['intr_rate'],
+                intr_rate2=option_data['intr_rate2'],
+                save_trm=option_data['save_trm']
+            ).exists():
+                option_serializer = DepositOptionsSerializer(data=option_data)
+                if option_serializer.is_valid(raise_exception=True):
+                    option_serializer.save(product=product)
+                # print('save!!')
 
-    return JsonResponse({ "message": "save okay!" })
+    # baseList 적금 처리
+    for base_data in baseList_saving:
+        base_data = fill_missing(base_data)  # 결측값 처리
+        fin_prdt_cd = base_data['fin_prdt_cd']
+
+        # 중복 체크: 이미 데이터베이스에 있는지 확인
+        if not SavingProducts.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+            serializer = SavingProductsSerializer(data=base_data)
+            if serializer.is_valid(raise_exception=True):
+                product = serializer.save()
+            # print('save!!#')
+
+
+    # optionList 적금 처리
+    for option_data in optionList_saving:
+        option_data = fill_missing(option_data)  # 결측값 처리
+        fin_prdt_cd = option_data['fin_prdt_cd']
+
+        # 중복 체크: 이미 데이터베이스에 있는지 확인
+        if SavingProducts.objects.filter(fin_prdt_cd=fin_prdt_cd).exists():
+            product = SavingProducts.objects.get(fin_prdt_cd=fin_prdt_cd)
+            
+            # 옵션이 이미 존재하는지 확인
+            if not SavingOptions.objects.filter(
+                product=product,
+                intr_rate_type_nm=option_data['intr_rate_type_nm'],
+                intr_rate=option_data['intr_rate'],
+                intr_rate2=option_data['intr_rate2'],
+                save_trm=option_data['save_trm'],
+                rsrv_type=option_data['rsrv_type'],
+                rsrv_type_nm=option_data['rsrv_type_nm'],
+            ).exists():
+                option_serializer = SavingOptionsSerializer(data=option_data)
+                if option_serializer.is_valid(raise_exception=True):
+                    option_serializer.save(product=product)
+                # print('save!!##')
+    
+    for data in baseList_deposit: ## 은행 종류 select바에 넣기
+        if data['kor_co_nm'] not in bank_deposit:
+            bank_deposit.append(data['kor_co_nm'])
+    for data in baseList_saving: ## 은행 종류 select바에 넣기
+        if data['kor_co_nm'] not in bank_saving:
+            bank_saving.append(data['kor_co_nm'])
+    context = {
+        'bank_deposit': bank_deposit,
+        'bank_saving': bank_saving
+    }
+
+    return render(request, 'finlife/index.html', context)
 
 
 @api_view(['GET', 'POST'])
