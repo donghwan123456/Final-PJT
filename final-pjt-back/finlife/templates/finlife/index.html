@@ -1,6 +1,6 @@
 {% extends "basefin.html" %}
 
-{% block content %}
+{% block search_form %}
 <form action="{% url 'finlife:filter' %}" method="get">
   <label for="lang">은행을 선택하세요</label>
   <select name="bank" id="bk">
@@ -11,4 +11,4 @@
   </select>
   <input type="submit" value="Submit" />
 </form>
-{% endblock content %}
+{% endblock search_form %}

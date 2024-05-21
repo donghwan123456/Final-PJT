@@ -38,6 +38,8 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'myapp',
+    'survey',
     'mainpage',
     'finlife',
     'articles',

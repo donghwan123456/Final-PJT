@@ -28,7 +28,8 @@ urlpatterns = [
     path('finlife/', include('finlife.urls')),
     path('articles/', include('articles.urls')),
     path('myapp/', include('myapp.urls')),
-    path('', RedirectView.as_view(url='/main/', permanent=False)),  # 루트 URL 리디렉션
-    path('main/', include('mainpage.urls')),  # 메인 페이지를 제공하는 앱의 URL 설정을 포함
+    path('survey/', include('survey.urls')),
+    path('', RedirectView.as_view(url='/mainpage/', permanent=False)),  # 루트 URL 리디렉션
+    path('mainpage/', include('mainpage.urls')),  # 메인 페이지를 제공하는 앱의 URL 설정을 포함
     # path('<int:user_pk>/password/', views.change_password, name='change_password')
 ]

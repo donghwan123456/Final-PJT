@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="likert-header">투자 성향 설문 조사</h1>
+<form action="">
+    <label class="statement">고객님의 연령대는 어떻게 되시나요?</label>
+    <ul class='likert'>
+        <li>
+            <input type="radio" name="likert1" value="strong_agree">
+            <label>10대</label>
+        </li>
+        <li>
+            <input type="radio" name="likert1" value="agree">
+            <label>20대</label>
+        </li>
+        <li>
+            <input type="radio" name="likert1" value="neutral">
+            <label>30~40대</label>
+        </li>
+        <li>
+            <input type="radio" name="likert1" value="disagree">
+            <label>50대</label>
+        </li>
+        <li>
+            <input type="radio" name="likert1" value="strong_disagree">
+            <label>60세 이상</label>
+        </li>
+    </ul>
+    <label class="statement">총 자산대비 금융자산의 비중은 어느 정도 입니까?</label>
+    <ul class='likert'>
+        <li>
+            <input type="radio" name="likert2" value="strong_agree">
+            <label>5% 이하</label>
+        </li>
+        <li>
+            <input type="radio" name="likert2" value="agree">
+            <label>10% 이하</label>
+        </li>
+        <li>
+            <input type="radio" name="likert2" value="neutral">
+            <label>20% 이하</label>
+        </li>
+        <li>
+            <input type="radio" name="likert2" value="disagree">
+            <label>30% 이하</label>
+        </li>
+        <li>
+            <input type="radio" name="likert2" value="strong_disagree">
+            <label>30% 초과</label>
+        </li>
+    </ul>
+    <label class="statement">투자를 통해 기대하는 수익과 감내할 수 있는 손실은 어느 정도 입니까?</label>
+    <ul class='likert'>
+        <li>
+            <input type="radio" name="likert3" value="strong_agree">
+            <label>원금 보존이 무조건!</label>
+        </li>
+        <li>
+            <input type="radio" name="likert3" value="agree">
+            <label></label>
+        </li>
+        <li>
+            <input type="radio" name="likert3" value="neutral">
+            <label>예적금 수익률보다 3% 이상 기대 가능하다면 원금보존 가능성이 조금 낮아져도..</label>
+        </li>
+        <li>
+            <input type="radio" name="likert3" value="disagree">
+            <label></label>
+        </li>
+        <li>
+            <input type="radio" name="likert3" value="strong_disagree">
+            <label>High Risk - High Return</label>
+        </li>
+    </ul>
+    <label class="statement">금융 상품에 대한 본인의 지식수준은 어느정도라고 생각하나요?</label>
+    <ul class='likert'>
+        <li>
+            <input type="radio" name="likert4" value="strong_agree">
+            <label>투자의사 결정 스스로 내려본 경험 없음</label>
+        </li>
+        <li>
+            <input type="radio" name="likert4" value="agree">
+            <label>주식과 채권, 예금과 적금을 구분할 수 있음</label>
+        </li>
+        <li>
+            <input type="radio" name="likert4" value="neutral">
+            <label>투자할 수 있는 대부분의 금융상품 차이를 구별할 수 있음</label>
+        </li>
+        <li>
+            <input type="radio" name="likert4" value="disagree">
+            <label>금융상품과 투자대상 상품의 차이 이해할 수 있음</label>
+        </li>
+        <li>
+            <input type="radio" name="likert4" value="strong_disagree">
+            <label>Master</label>
+        </li>
+    </ul>
+    <div class="buttons">
+        <button class="clear" type="reset">Clear</button>
+        <button class="submit" type="submit">Submit</button>
+    </div>
+</form>
+{% endblock  %}
+

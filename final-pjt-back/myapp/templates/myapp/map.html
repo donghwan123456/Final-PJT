@@ -1,81 +1,57 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>주변 은행 찾기</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-       .container {
-            display: flex;
-            height: 100vh;
-        }
-       .sidebar {
-            width: 250px;
-            background-color: #333;
-            color: white;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-        .sidebar h2, .sidebar p {
-            margin: 0;
-            padding: 10px 5px;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
-            padding: 10px 5px;
-            display: block;
-            transition: background-color 0.3s;
-        }
-        .sidebar ul li a:hover {
-            background-color: #555;
-        }
-        .sidebar i {
-            margin-right: 10px;
-        }
-       .content {
-            flex-grow: 1;
-            padding: 20px;
-        }
-        #map {
-            width: 100%;
-            height: calc(100vh - 40px);
-        }
-    </style>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6c8aa4e58569724bbf166e436ae9b689&libraries=services"></script>
-</head>
-<body>
-    <div class="container">
-        <div class="sidebar">
-            <h2>MONIMATE</h2>
-            <p>메뉴</p>
-            <ul>
-                <li><a href="#"><i class="fa fa-line-chart"></i>금융상품비교</a></li>
-                <li><a href="#"><i class="fa fa-usd"></i>환율 계산기</a></li>
-                <li><a href="#"><i class="fa fa-robot"></i>AI 상품 추천</a></li>
-                <li><a href="#"><i class="fa fa-user-circle"></i>나의 투자 성향 알아보기</a></li>
-                <li><a href="#"><i class="fa fa-bullhorn"></i>공지사항</a></li>
-                <li><a href="#"><i class="fa fa-comments"></i>게시판</a></li>
-                <li><a href="#"><i class="fa fa-sign-in"></i>로그인</a></li>
-                <li><a href="#"><i class="fa fa-sign-out"></i>로그아웃</a></li>
-                <li><a href="#"><i class="fa fa-user-plus"></i>회원가입</a></li>
-            </ul>
-        </div>
-        <div class="content">
-            <div id="map"></div>
-            <button onclick="은행_검색_근처()">주변 은행 찾기</button>
-        </div>
-    </div>
+{% extends "base.html" %}
 
+{% block style %}
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        display: flex;
+        height: 100vh;
+    }
+    .sidebar {
+        width: 250px;
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    .sidebar h2, .sidebar p {
+        margin: 0;
+        padding: 10px 5px;
+    }
+    .sidebar ul {
+        list-style: none;
+        padding: 0;
+    }
+    .sidebar ul li a {
+        color: white;
+        text-decoration: none;
+        padding: 10px 5px;
+        display: block;
+        transition: background-color 0.3s;
+    }
+    .sidebar ul li a:hover {
+        background-color: #555;
+    }
+    .sidebar i {
+        margin-right: 10px;
+    }
+    .content {
+        flex-grow: 1;
+        padding: 20px;
+    }
+    #map {
+        width: 100%;
+        height: calc(100vh - 40px);
+    }
+</style>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6c8aa4e58569724bbf166e436ae9b689&libraries=services"></script>
+{% endblock style %}
+
+{% block content %}
     <script>
         var map, ps, infowindow;
 
@@ -166,5 +142,6 @@
 
         window.onload = initMap;
     </script>
-</body>
-</html>
+{% endblock content %}
+
+
