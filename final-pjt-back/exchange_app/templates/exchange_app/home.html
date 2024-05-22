@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block style %}
+{% load static %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Titillium+Web:300" rel="stylesheet">
+<style>
+    .card {
+        margin: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 1.25rem;
+    }
+    .card-body {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+    }
+    .card-title {
+        font-size: 1.25rem;
+    }
+    .card-text {
+        font-size: 1rem;
+        text-align: right;
+        flex-grow: 1;
+    }
+    .card-rate {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: right;
+    }
+    .flag {
+        width: 120px;  /* 크기를 3배로 설정 (기존 크기 40px 기준) */
+        height: auto;
+        margin-right: 15px;
+    }
+    .no-touch .scrollable.hover {
+        overflow-y: hidden;
+    }
+    .no-touch .scrollable.hover:hover {
+        overflow-y: auto;
+        overflow: visible;
+    }
+    a:hover, a:focus {
+        text-decoration: none;
+    }
+    nav {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -o-user-select: none;
+        user-select: none;
+    }
+    nav ul, nav li {
+        outline: 0;
+        margin: 0;
+        padding: 0;
+    }
+    .main-menu li:hover > a, nav.main-menu li.active > a, .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus, .dropdown-menu > .active > a, .dropdown-menu > .active > a:hover, .dropdown-menu > .active > a:focus, .no-touch .dashboard-page nav.dashboard-menu ul li:hover a, .dashboard-page nav.dashboard-menu ul li.active a {
+        color: #fff;
+        background-color: #000000;
+    }
+    .area {
+        float: left;
+        background: #e2e2e2;
+        width: 100%;
+        height: 100%;
+    }
+    @font-face {
+        font-family: 'Titillium Web';
+        font-style: normal;
+        font-weight: 300;
+        src: local('Titillium WebLight'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
+    }
+</style>
+{% endblock style %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center my-4">
+        <h1>{{ today.year }}년 {{ today.month }}/{{ today.day }} 오늘의 환율</h1>
+        <a href="{% url 'exchange_app:calculator' %}" class="btn btn-primary btn-lg">환율 계산기</a>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for rate in exchange_rates %}
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <img src="{% static 'flags/'|add:rate.cur_unit|add:'.png' %}" alt="{{ rate.cur_nm }} flag" class="flag">
+                        <div>
+                            <h5 class="card-title">{{ rate.cur_nm }}</h5>
+                            <p class="card-text">1 {{ rate.cur_unit }} =</p>
+                            <p class="card-rate">{{ rate.bkpr }} 원</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock content %}

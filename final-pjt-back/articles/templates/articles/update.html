@@ -1,18 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>Update</h1>
+{% extends 'base.html' %}
+
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'writing.css' %}" >
+{% endblock style %}
+
+{% block content %}
+
+  
   <form action="{% url "articles:update" article.pk %}" method="POST">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit">
+    <table>
+      <tr>
+          <td><h2>수정하기</h2></td>
+      </tr>
+      <tr>
+          <td>
+              <label for="{{ form.title.id_for_label }}">제목:</label>
+              {{ form.title }}
+              {{ form.title.errors }}
+          </td>
+      </tr>
+      <tr>
+          <td>
+              <label for="{{ form.content.id_for_label }}">내용:</label>
+              {{ form.content }}
+              {{ form.content.errors }}
+          </td>
+      </tr>
+      <tr>
+          <td><input type="submit" value="등록"></td>
+          <td><input type="submit" value="뒤로가기" id="submitButton"></td>
+      </tr>
+  </table>
+
   </form>
   <hr>
-  <a href="{% url "articles:detail" article.pk %}">[back]</a>
-</body>
-</html>
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    document.getElementById("submitButton").addEventListener("click", function(event) {
+      event.preventDefault(); // 기본 제출 동작을 막음
+      window.location.href = "{% url 'articles:index' %}"; // 원하는 URL로 이동
+  });
+  </script>
+{% endblock content %}

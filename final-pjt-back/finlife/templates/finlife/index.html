@@ -14,11 +14,39 @@
   <label for="bank">은행을 선택하세요</label>
   <select name="bank" id="bank">
     <option value="all">전체</option>
-    {% for bank_name in bank_deposit %}
-      <option value="{{ bank_name }}">{{ bank_name }}</option>
-    {% endfor %}
+    {% if request.GET.product_type == "deposit" %}
+      {% for bank_name in bank_deposit %}
+        <option value="{{ bank_name }}">{{ bank_name }}</option>
+      {% endfor %}
+    {% elif request.GET.product_type == "saving" %}
+      {% for bank_name in bank_saving %}
+        <option value="{{ bank_name }}">{{ bank_name }}</option>
+      {% endfor %}
+    {% endif %}
   </select>
 
   <input type="submit" value="Submit" />
 </form>
+
+<script>
+  function updateBankOptions() {
+    var productType = document.querySelector('input[name="product_type"]:checked').value;
+    var bankSelect = document.getElementById("bank");
+    bankSelect.innerHTML = ""; // Clear existing options
+    
+    var bankOptions = [];
+    if (productType === 'deposit') {
+      bankOptions = {{ bank_deposit|safe }};
+    } else if (productType === 'saving') {
+      bankOptions = {{ bank_saving|safe }};
+    }
+    
+    for (var i = 0; i < bankOptions.length; i++) {
+      var option = document.createElement("option");
+      option.text = bankOptions[i];
+      option.value = bankOptions[i];
+      bankSelect.add(option);
+    }
+  }
+  </script>
 {% endblock search_form %}

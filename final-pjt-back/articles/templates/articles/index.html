@@ -1,47 +1,86 @@
-<!DOCTYPE html>
 {% extends 'base.html' %}
 
-{% block content %}
-  {% if request.user.is_authenticated %}
-    <h2>반갑습니다, {{ user.username }} 님</h2>
-    <a href="{% url "accounts:profile" user.username %}">내 프로필</a>
-    <form action="{% url "accounts:logout" %}" method="POST">
-      {% csrf_token %}
-      <input type="submit" value="Logout">
-    </form>
-    <form action="{% url "accounts:delete" %}" method="POST">
-      {% csrf_token %}
-      <input type="submit" value="회원탈퇴">
-    </form>
-    <a href="{% url "accounts:update" %}">회원정보수정</a>
-    <a href="{% url "articles:create" %}">CREATE</a>
-  {% else %}
-    <a href="{% url "accounts:login" %}">Login</a>
-    <a href="{% url "accounts:signup" %}">Signup</a>
-  {% endif %}
-  <h1>Articles</h1>
-  <hr>
-  {% for article in articles %}
-    <p>
-      작성자: 
-      <a href="{% url "accounts:profile" article.user.username %}">{{ article.user }}</a>
-    </p>
-    <p>글 번호: {{ article.pk }}</p>
-    <a href="{% url "articles:detail" article.pk %}">
-      <p>글 제목: {{ article.title }}</p>
-    </a>
-    <p>글 내용: {{ article.content }}</p>
-    <p>{{ article.like_users.all|length }} 명이 이 글을 좋아합니다.</p>
-    <p>{{ article.like_users.count }} 명이 이 글을 좋아합니다.</p>
-    <form action="{% url "articles:likes" article.pk %}" method="POST">
-      {% csrf_token %}
-      {% if request.user in article.like_users.all %}
-        <input type="submit" value="좋아요 취소">
-      {% else %}
-        <input type="submit" value="좋아요">
-      {% endif %}
-    </form>
-    <hr>
-  {% endfor %}
-{% endblock %}
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'board.css' %}" >
+{% endblock style %}
 
+{% block content %}
+<div class="table-container">
+    <table class="table" id="postsTable">
+        <tr>
+            <td colspan="4"><h2>게시판</h2></td>
+        </tr>
+        {% comment %} <h2>게시판</h2> {% endcomment %}
+        <tr class="header">
+            <td class="num">번호</td>
+            <td class="title">제목</td>
+            <td>작성자</td>
+            <td>작성날짜</td>
+        </tr>
+        {% for article in articles %}
+        <tr class="body">
+            <td class="num">{{ article.pk }}</td>
+            <td class="title">
+                <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a>
+            </td>
+            <td>
+                {% comment %} <a href="{% url 'accounts:profile' article.user.username %}">{{ article.user }}</a> {% endcomment %}
+                {{ article.user }}
+            </td>
+            <td>{{ article.created_at|date:"Y-m-d" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <button onclick="redirectToIndex()">글 작성하기</button>  
+</div>
+
+<script>
+    {% comment %} let posts = JSON.parse(localStorage.getItem('posts')) || [
+        { id: 1, title: '첫 번째 게시글', author: '작성자', date: '2023-05-01' },
+        { id: 2, title: '두 번째 게시글', author: '작성자', date: '2023-05-02' }
+    ]; {% endcomment %}
+
+    {% comment %} function renderPosts() {
+        const table = document.getElementById('postsTable');
+        const header = table.querySelector('.header').outerHTML;
+        const initialContent = table.innerHTML;
+        table.innerHTML = header; // 헤더만 남기고 나머지를 지웁니다.
+        
+        // Django에서 제공한 게시글을 먼저 추가
+        table.innerHTML += initialContent;
+
+        // 로컬 스토리지에서 가져온 게시글을 추가
+        posts.forEach(post => {
+            const row = `<tr class="body">
+                <td class="num">${post.id}</td>
+                <td class="title">${post.title}</td>
+                <td>${post.author}</td>
+                <td>${post.date}</td>
+            </tr>`;
+            table.innerHTML += row;
+        });
+    }
+
+    function checkForNewPost() {
+        const newPostJson = localStorage.getItem('newPost');
+        if (newPostJson) {
+            const newPost = JSON.parse(newPostJson);
+            posts.push({ id: posts.length + 1, title: newPost.title, author: 'Anonymous', date: newPost.date });
+            localStorage.removeItem('newPost'); // 새로운 게시글 데이터를 추가 후 제거
+            renderPosts(); // 새로운 게시글을 포함하여 게시글을 다시 렌더링
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderPosts();
+        checkForNewPost();
+    }); {% endcomment %}
+
+    function redirectToIndex() {
+        window.location.href = "{% url 'articles:create' %}";
+    }
+</script>
+{% endblock content %}

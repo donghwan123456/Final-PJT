@@ -12,27 +12,34 @@
         <th scope="col">12개월</th>
         <th scope="col">24개월</th>
         <th scope="col">36개월</th>
+        {% if request.GET.product_type == "saving" %}
+        <th scope="col">적립유형명</th>
+        {% endif %}
+
       </tr>
     </thead>
     
     <tbody>
       {% for product in deposit_products %}
       <tr>
-        
-        <th scope="row">{{ forloop.counter }}</th>
-        <td>{{product.kor_co_nm}}</td>
-        <td>{{product.fin_prdt_nm}}</td>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ product.kor_co_nm }}</td>
+          <td>{{ product.fin_prdt_nm }}</td>
+            {% for option in deposit_options %}
+                {% if option.product == product.id %}
+                    <td>{{ option.intr_rate }}</td>
 
-        {% for options in deposit_options %}
-
-            <td>{{options.intr_rate}}</td>
-
-        {% endfor %}
-        
+                {% endif %}
+                {% empty %}
+                <td colspan="4">-</td>
+                
+            {% endfor %}
+          {% if request.GET.product_type == "saving" %}
+          <td>{{ deposit_options.rsrv_type_nm }}</td>
+          {% endif %}
       </tr>
       {% endfor %}
-    </tbody>
-    
+  </tbody>
   </table>
     {% comment %} <ul>
       {% for product in deposit_products %}

@@ -25,7 +25,7 @@
       <div class="swiper-container">
         <div class="swiper-wrapper">
           <div class="swiper-slide">
-            <a href="http://127.0.0.1:5500/환율계산기/" style="display: block;">
+            <a href="{% url 'exchange_app:home' %}" style="display: block;">
               <img src="../static/image2.png" alt="exchange" />   
             </a>
             <div class="cost">무료 이벤트</div>
@@ -73,7 +73,9 @@
             </div>
           </div>
           <div class="swiper-slide">
+            <a href="{% url 'myapp:map' %}">
             <img src="../static/image4.png" alt="bank_map" />
+            </a>
             <div class="cost dark-text">무료 이벤트</div>
             <div class="overlay">
               <h1>주변 은행찾기</h1>
@@ -98,6 +100,7 @@
           <div class="swiper-slide">
             <a href="{% url 'finlife:index' %}">
             <img src="../static/image1.png" alt="monimate_logo" />
+            </a>
             <div class="cost dark-text">무료 이벤트</div>
             <div class="overlay">
               <h1>금융 상품 비교</h1>
@@ -118,7 +121,6 @@
                 <span>619 reviews</span>
               </div>
             </div>
-            </a>
           </div>
         </div>
       </div>

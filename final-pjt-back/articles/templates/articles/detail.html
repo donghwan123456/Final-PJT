@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
   <h1>Detail</h1>
   <h2>{{ article.pk }} 번째 글</h2>
   <hr>
@@ -46,5 +41,4 @@
   </ul>
   <hr>
   <a href="{% url "articles:index" %}">[back]</a>
-</body>
-</html>
+{% endblock content %}

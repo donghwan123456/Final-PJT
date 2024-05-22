@@ -12,13 +12,13 @@ from .forms import CustomUserChangeForm, CustomUserCreationForm
 # Create your views here.
 def login(request):
     if request.user.is_authenticated:
-        return redirect('articles:index')
+        return redirect('mainpage:mainpage')
 
     if request.method == 'POST':
         form = AuthenticationForm(request, request.POST)
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect('articles:index')
+            return redirect('mainpage:mainpage')
     else:
         form = AuthenticationForm()
     context = {
@@ -30,18 +30,18 @@ def login(request):
 @login_required
 def logout(request):
     auth_logout(request)
-    return redirect('articles:index')
+    return redirect('mainpage:mainpage')
 
 
 def signup(request):
     if request.user.is_authenticated:
-        return redirect('articles:index')
+        return redirect('mainpage:mainpage')
 
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('articles:index')
+            return redirect('mainpage:mainpage')
     else:
         form = CustomUserCreationForm()
     context = {
@@ -53,7 +53,7 @@ def signup(request):
 @login_required
 def delete(request):
     request.user.delete()
-    return redirect('articles:index')
+    return redirect('mainpage:mainpage')
 
 
 @login_required
@@ -62,7 +62,7 @@ def update(request):
         form = CustomUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
             form.save()
-            return redirect('articles:index')
+            return redirect('mainpage:mainpage')
     else:
         form = CustomUserChangeForm(instance=request.user)
     context = {
@@ -79,7 +79,7 @@ def change_password(request):
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
-            return redirect('articles:index')
+            return redirect('mainpage:mainpage')
     else:
         form = PasswordChangeForm(request.user)
     context = {

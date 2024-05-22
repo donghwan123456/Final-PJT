@@ -111,5 +111,5 @@ def likes(request, article_pk):
         'is_liked': is_liked,
         'liked_count': article.like_users.count(),
     }
-    return JsonResponse(context)
-    # return redirect('articles:index')
+    # return JsonResponse(context)
+    return redirect('articles:index')

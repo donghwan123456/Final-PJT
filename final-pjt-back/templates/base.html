@@ -50,7 +50,7 @@
                 </a>
             </li>
             <li class="li" class="has-subnav">
-                <a href="#">
+                <a href="{% url 'exchange_app:home' %}">
                     <i class="fa fa-dollar-sign fa-2x"></i>
                     <span class="nav-text">
                         환율계산기
@@ -121,25 +121,37 @@
                     </span>
                 </a>
             </li>
+            {% if request.user.is_authenticated %}
+            <li class="li">
+                <a href="{% url "accounts:profile" user.username %}">
+                    <i class="fa fa-user fa-2x"></i>
+                    <span class="nav-text">
+                        프로필 페이지
+                    </span>
+                </a>
+            </li>
+            {% endif %}
         </ul>
 
         <ul class="logout">
-          <li>
+            {% if not request.user.is_authenticated %}
+            <li>
             <a href="{% url 'accounts:signup' %}">
                 <i class="fa fa-user-plus fa-2x"></i>
-                <span class="nav-text">
-                    회원가입
-                </span>
-            </a>
-        </li>  
-          <li>
-            <a href="{% url 'accounts:login' %}">
-                <i class="fa fa-sign-in-alt fa-2x"></i>
-                <span class="nav-text">
-                    로그인
-                </span>
-            </a>
-        </li>  
+                    <span class="nav-text">
+                        회원가입
+                    </span>
+                </a>
+            </li>  
+            <li>
+                <a href="{% url 'accounts:login' %}">
+                    <i class="fa fa-sign-in-alt fa-2x"></i>
+                    <span class="nav-text">
+                        로그인
+                    </span>
+                </a>
+            </li>
+            {% else %}  
             <li>
                 <a href="{% url 'accounts:logout' %}">
                     <i class="fa fa-sign-out-alt fa-2x"></i>
@@ -147,7 +159,8 @@
                         로그아웃
                     </span>
                 </a>
-            </li>  
+            </li>
+            {% endif %}  
         </ul>
     </nav>
   </div>

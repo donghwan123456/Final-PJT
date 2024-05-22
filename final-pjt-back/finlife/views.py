@@ -36,10 +36,6 @@ def index(request): # DB에 저장기능 통합
     baseList_saving = result_saving['baseList']
     optionList_saving = result_saving['optionList']
 
-    # df_base = pd.DataFrame(baseList)
-    # df_option = pd.DataFrame(optionList)
-    # df_option.fillna(-1, inplace=True)
-
     def fill_missing(data, default_value=-1):
         return {k: (v if v is not None else default_value) for k, v in data.items()}
 
@@ -196,23 +192,34 @@ def sort_rate(request):
 @api_view(['GET'])
 def filter(request):
     kor_co_nm = request.GET.get('bank')
+    product_type = request.GET.get('product_type')
 
-    # DepositProducts 필터링
-    deposit_products = DepositProducts.objects.filter(kor_co_nm=kor_co_nm)
-    serializers_product = DepositProductsSerializer(deposit_products, many=True)
+    if product_type == 'deposit':
+        # DepositProducts 필터링
+        products = DepositProducts.objects.filter(kor_co_nm=kor_co_nm)
+        serializers_product = DepositProductsSerializer(products, many=True)
 
-    # DepositProducts에 연결된 DepositOptions 필터링
-    options = DepositOptions.objects.filter(product__in=deposit_products)
-    serializers_option = DepositOptionsSerializer(options, many=True)
-    # serializers_option = serializers_option.get('kor_co_nm')
+        # DepositProducts에 연결된 DepositOptions 필터링
+        options = DepositOptions.objects.filter(product__in=products)
+        serializers_option = DepositOptionsSerializer(options, many=True)
+        # serializers_option = serializers_option.get('kor_co_nm')
+
+    elif product_type == 'saving':
+        products = SavingProducts.objects.filter(kor_co_nm=kor_co_nm)
+        serializers_product = SavingProductsSerializer(products, many=True)
+
+        # DepositProducts에 연결된 DepositOptions 필터링
+        options = SavingOptions.objects.filter(product__in=products)
+        serializers_option = SavingOptionsSerializer(options, many=True)
 
     # DepositProducts와 DepositOptions를 번갈아가며 출력
     product_data = []
     option_data = []
     for product in serializers_product.data:
         product_data.append(product)
-        product_options = [option for option in serializers_option.data if option['product'] == product['id'] and option['save_trm'] >= 6 and option['save_trm'] <= 36]
-        option_data.append(product_options)
+        product_options = [option for option in serializers_option.data if option['product'] == product['id'] and 6 <= option['save_trm'] <= 36]
+        sorted_product_options = sorted(product_options, key=lambda x: x['save_trm'])  # save_trm 기준으로 오름차순 정렬
+        option_data.extend(sorted_product_options)
 
     context = {
         'deposit_products': product_data,

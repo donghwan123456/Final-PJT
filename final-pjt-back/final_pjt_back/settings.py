@@ -38,6 +38,7 @@ ALLOWED_HOSTS = []
 
 # Application definition
 INSTALLED_APPS = [
+    'exchange_app',
     'myapp',
     'survey',
     'mainpage',
