@@ -1,51 +1,51 @@
-{% extends "basefin.html" %}
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'finlife.css' %}">
+{% endblock style %}
 
 {% block content %}
-<h1>Bank: {{ selected_bank }}</h1>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">금융회사명</th>
-        <th scope="col">상품명</th>
-        <th scope="col">6개월</th>
-        <th scope="col">12개월</th>
-        <th scope="col">24개월</th>
-        <th scope="col">36개월</th>
-        {% if request.GET.product_type == "saving" %}
-        <th scope="col">적립유형명</th>
-        {% endif %}
-
-      </tr>
-    </thead>
-    
-    <tbody>
-      {% for product in deposit_products %}
-      <tr>
-          <th scope="row">{{ forloop.counter }}</th>
-          <td>{{ product.kor_co_nm }}</td>
-          <td>{{ product.fin_prdt_nm }}</td>
-            {% for option in deposit_options %}
-                {% if option.product == product.id %}
-                    <td>{{ option.intr_rate }}</td>
-
-                {% endif %}
-                {% empty %}
-                <td colspan="4">-</td>
-                
-            {% endfor %}
-          {% if request.GET.product_type == "saving" %}
-          <td>{{ deposit_options.rsrv_type_nm }}</td>
-          {% endif %}
-      </tr>
-      {% endfor %}
-  </tbody>
-  </table>
-    {% comment %} <ul>
-      {% for product in deposit_products %}
-          <li>{{ product }}</li> <!-- 필요한 정보를 여기에 출력하세요 -->
-      {% endfor %}
-    </ul>  {% endcomment %}
-<a href="{% url 'finlife:index' %}">Go back to bank selection</a>
-
+<div class="container">
+    <h1>Bank: {{ selected_bank }}</h1>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>금융회사명</th>
+                    <th>상품명</th>
+                    <th>6개월</th>
+                    <th>12개월</th>
+                    <th>24개월</th>
+                    <th>36개월</th>
+                    {% if request.GET.product_type == "saving" %}
+                    <th>적립유형명</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in deposit_products %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ product.kor_co_nm }}</td>
+                    <td>{{ product.fin_prdt_nm }}</td>
+                    {% for option in deposit_options %}
+                        {% if option.product == product.id %}
+                            <td>{{ option.intr_rate }}</td>
+                        {% endif %}
+                    {% empty %}
+                    <td colspan="4">-</td>
+                    {% endfor %}
+                    {% if request.GET.product_type == "saving" %}
+                    <td>{{ deposit_options.rsrv_type_nm }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a href="{% url 'finlife:index' %}">돌아가기</a>
+</div>
 {% endblock content %}

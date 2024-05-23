@@ -2,46 +2,32 @@
 
 {% block style %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'writing.css' %}" >
+<link rel="stylesheet" href="{% static 'articles.css' %}">
 {% endblock style %}
 
 {% block content %}
+<div class="container">
+    <h2>글쓰기</h2>
+    <form action="{% url 'articles:create' %}" method="POST">
+        {% csrf_token %}
+        <label for="{{ form.title.id_for_label }}">제목:</label>
+        {{ form.title }}
+        {{ form.title.errors }}
 
-  
-  <form action="{% url "articles:create" %}" method="POST">
-    {% csrf_token %}
-    <table>
-      <tr>
-          <td><h2>글쓰기</h2></td>
-      </tr>
-      <tr>
-          <td>
-              <label for="{{ form.title.id_for_label }}">제목:</label>
-              {{ form.title }}
-              {{ form.title.errors }}
-          </td>
-      </tr>
-      <tr>
-          <td>
-              <label for="{{ form.content.id_for_label }}">내용:</label>
-              {{ form.content }}
-              {{ form.content.errors }}
-          </td>
-      </tr>
-      <tr>
-          <td><input type="submit" value="등록"></td>
-          <td><input type="submit" value="뒤로가기" id="submitButton"></td>
-      </tr>
-  </table>
+        <label for="{{ form.content.id_for_label }}">내용:</label>
+        {{ form.content }}
+        {{ form.content.errors }}
 
-  </form>
-  <hr>
+        <input type="submit" value="등록">
+        <button id="cancelButton">뒤로가기</button>
+    </form>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script>
-    document.getElementById("submitButton").addEventListener("click", function(event) {
-      event.preventDefault(); // 기본 제출 동작을 막음
-      window.location.href = "{% url 'articles:index' %}"; // 원하는 URL로 이동
-  });
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    document.getElementById("cancelButton").addEventListener("click", function(event) {
+        event.preventDefault(); // 기본 제출 동작을 막음
+        window.location.href = "{% url 'articles:index' %}"; // 원하는 URL로 이동
+    });
+</script>
 {% endblock content %}

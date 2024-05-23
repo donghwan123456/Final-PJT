@@ -2,83 +2,55 @@
 
 {% block style %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'board.css' %}" >
+<link rel="stylesheet" href="{% static 'articles.css' %}">
 {% endblock style %}
 
 {% block content %}
-<div class="table-container">
+<div class="container table-container">
+    <h2>게시판</h2>
     <table class="table" id="postsTable">
-        <tr>
-            <td colspan="4"><h2>게시판</h2></td>
-        </tr>
-        {% comment %} <h2>게시판</h2> {% endcomment %}
         <tr class="header">
-            <td class="num">번호</td>
-            <td class="title">제목</td>
-            <td>작성자</td>
-            <td>작성날짜</td>
+            <th class="num">번호</th>
+            <th class="title">제목</th>
+            <th class="author">작성자</th>
+            <th class="date">등록일</th>
         </tr>
-        {% for article in articles %}
+        {% for article in page_obj %}
         <tr class="body">
             <td class="num">{{ article.pk }}</td>
             <td class="title">
                 <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a>
             </td>
-            <td>
-                {% comment %} <a href="{% url 'accounts:profile' article.user.username %}">{{ article.user }}</a> {% endcomment %}
-                {{ article.user }}
-            </td>
-            <td>{{ article.created_at|date:"Y-m-d" }}</td>
+            <td class="author">{{ article.user }}</td>
+            <td class="date">{{ article.created_at|date:"Y-m-d" }}</td>
         </tr>
         {% endfor %}
     </table>
 
-    <br>
-    <button onclick="redirectToIndex()">글 작성하기</button>  
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; 처음</a>
+            <a href="?page={{ page_obj.previous_page_number }}">&lsaquo; 이전</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="current">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">다음 &rsaquo;</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">끝 &raquo;</a>
+        {% endif %}
+    </div>
+
+    <button onclick="redirectToIndex()">글 작성하기</button>
 </div>
 
 <script>
-    {% comment %} let posts = JSON.parse(localStorage.getItem('posts')) || [
-        { id: 1, title: '첫 번째 게시글', author: '작성자', date: '2023-05-01' },
-        { id: 2, title: '두 번째 게시글', author: '작성자', date: '2023-05-02' }
-    ]; {% endcomment %}
-
-    {% comment %} function renderPosts() {
-        const table = document.getElementById('postsTable');
-        const header = table.querySelector('.header').outerHTML;
-        const initialContent = table.innerHTML;
-        table.innerHTML = header; // 헤더만 남기고 나머지를 지웁니다.
-        
-        // Django에서 제공한 게시글을 먼저 추가
-        table.innerHTML += initialContent;
-
-        // 로컬 스토리지에서 가져온 게시글을 추가
-        posts.forEach(post => {
-            const row = `<tr class="body">
-                <td class="num">${post.id}</td>
-                <td class="title">${post.title}</td>
-                <td>${post.author}</td>
-                <td>${post.date}</td>
-            </tr>`;
-            table.innerHTML += row;
-        });
-    }
-
-    function checkForNewPost() {
-        const newPostJson = localStorage.getItem('newPost');
-        if (newPostJson) {
-            const newPost = JSON.parse(newPostJson);
-            posts.push({ id: posts.length + 1, title: newPost.title, author: 'Anonymous', date: newPost.date });
-            localStorage.removeItem('newPost'); // 새로운 게시글 데이터를 추가 후 제거
-            renderPosts(); // 새로운 게시글을 포함하여 게시글을 다시 렌더링
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        renderPosts();
-        checkForNewPost();
-    }); {% endcomment %}
-
     function redirectToIndex() {
         window.location.href = "{% url 'articles:create' %}";
     }

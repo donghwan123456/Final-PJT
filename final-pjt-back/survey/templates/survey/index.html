@@ -1,16 +1,28 @@
-<!DOCTYPE html>
 {% extends "base.html" %}
 
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'survey.css' %}">
+{% endblock style %}
+
 {% block content %}
-{% comment %} <h1 class="likert-header">투자 성향 설문 조사</h1> {% endcomment %}
-<h1 class="likert-header">투자 성향 설문 조사</h1>
+<div class="survey-container">
+    <h1 class="likert-header">투자 성향 설문 조사</h1>
     <form method="post" action="{% url "survey:index" %}">
         {% csrf_token %}
-        {{ form.as_p }}
+        <div class="form-group">
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+        </div>
         <div class="buttons">
             <button class="clear" type="reset">Clear</button>
             <button class="submit" type="submit">Submit</button>
         </div>
     </form>
-{% endblock  %}
-
+</div>
+{% endblock %}

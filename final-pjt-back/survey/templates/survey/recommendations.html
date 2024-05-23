@@ -1,42 +1,50 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'survey.css' %}">
+{% endblock style %}
+
 {% block content %}
-<h1>추천 예적금 상품</h1>
+<div class="survey-container">
+    <h1>추천 예적금 상품</h1>
     
-<h2>예금 상품</h2>
-<ul>
-    {% for product in deposit_products %}
-        <li>
-            <a href="{% url 'finlife:product_detail' 'deposit' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
-            <ul>
-                {% for option in product.options.all %}
-                    <li>{{option.save_trm}}개월 금리: {{ option.intr_rate }}%</li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-</ul>
+    <h2>예금 상품</h2>
+    <ul>
+        {% for product in deposit_products %}
+            <li>
+                <a href="{% url 'finlife:product_detail' 'deposit' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
+                <ul>
+                    {% for option in product.options.all %}
+                        <li>{{option.save_trm}}개월 금리: {{ option.intr_rate }}%</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
 
-<h2>적금 상품</h2>
-<ul>
-    {% for product in saving_products %}
-        <li>
-            <a href="{% url 'finlife:product_detail' 'saving' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
-            <ul>
-                {% for option in product.options.all %}
-                    <li>{{option.save_trm}}개월 금리: {{ option.intr_rate }}%</li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-</ul>
+    <h2>적금 상품</h2>
+    <ul>
+        {% for product in saving_products %}
+            <li>
+                <a href="{% url 'finlife:product_detail' 'saving' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
+                <ul>
+                    {% for option in product.options.all %}
+                        <li>{{option.save_trm}}개월 금리: {{ option.intr_rate }}%</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
 
-{% if additional_recommendations %}
-<h2>추가 추천 상품</h2>
-<ul>
-    {% for recommendation in additional_recommendations %}
-        <li><a href="{{ recommendation.url }}">{{ recommendation.name }}</a></li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% endblock content %}
+    {% if additional_recommendations %}
+    <h2>추가 추천 상품</h2>
+    <ul>
+        {% for recommendation in additional_recommendations %}
+            <li><a href="{{ recommendation.url }}">{{ recommendation.name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

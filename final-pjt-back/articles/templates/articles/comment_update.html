@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'articles.css' %}">
+{% endblock style %}
+
+{% block content %}
+<div class="container">
+    <h2>댓글 수정</h2>
+    <form action="{% url 'articles:comments_update' article.pk comment.pk %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <input type="submit" value="수정하기">
+        <a class="input_link" href="{% url 'articles:detail' article.pk %}">취소</a>
+    </form>
+</div>
+{% endblock content %}

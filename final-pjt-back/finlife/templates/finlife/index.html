@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'finlife.css' %}">
+{% endblock style %}
+
 {% block content %}
+<div class="container">
     <h1>금융 상품</h1>
     
     <form method="get" action=".">
@@ -15,88 +22,93 @@
     </form>
     
     <h2>예금 상품</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>금융 회사명</th>
-                <th>상품명</th>
-                <th>기타 유의사항</th>
-                <th>최고 한도</th>
-                <th>금리</th>
-                <th>우대 금리</th>
-                <th>저축 기간</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in deposit_products %}
-            <tr>
-                <td>{{ product.kor_co_nm }}</td>
-                <td><a href="{% url 'finlife:product_detail' 'deposit' product.id %}">{{ product.fin_prdt_nm }}</a></td>
-                <td>{{ product.etc_note }}</td>
-                <td>{{ product.max_limit }}</td>
-                <td>
-                    {% for option in product.options.all %}
-                        <div>{{ option.intr_rate }}%</div>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for option in product.options.all %}
-                        <div>{{ option.intr_rate2 }}%</div>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for option in product.options.all %}
-                        <div>{{ option.save_trm }}개월</div>
-                    {% endfor %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>금융 회사명</th>
+                    <th>상품명</th>
+                    {% comment %} <th>기타 유의사항</th> {% endcomment %}
+                    <th>최고 한도</th>
+                    <th>금리</th>
+                    <th>우대 금리</th>
+                    <th>저축 기간</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in deposit_products %}
+                <tr>
+                    <td>{{ product.kor_co_nm }}</td>
+                    <td><a href="{% url 'finlife:product_detail' 'deposit' product.id %}">{{ product.fin_prdt_nm }}</a></td>
+                    {% comment %} <td>{{ product.etc_note }}</td> {% endcomment %}
+                    <td>{{ product.max_limit }}</td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.intr_rate }}%</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.intr_rate2 }}%</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.save_trm }}개월</div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     
     <h2>적금 상품</h2>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>금융 회사명</th>
-                <th>상품명</th>
-                <th>기타 유의사항</th>
-                <th>최고 한도</th>
-                <th>금리</th>
-                <th>우대 금리</th>
-                <th>적립 유형명</th>
-                <th>저축 기간</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in saving_products %}
-            <tr>
-                <td>{{ product.kor_co_nm }}</td>
-                <td><a href="{% url 'finlife:product_detail' 'saving' product.id %}">{{ product.fin_prdt_nm }}</a></td>
-                <td>{{ product.etc_note }}</td>
-                <td>{{ product.max_limit }}</td>
-                <td>
-                    {% for option in product.options.all %}
-                        <div>{{ option.intr_rate }}%</div>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for option in product.options.all %}
-                        <div>{{ option.intr_rate2 }}%</div>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for option in product.options.all %}
-                        <div>{{ option.rsrv_type_nm }}</div>
-                    {% endfor %}
-                </td>
-                <td>
-                    {% for option in product.options.all %}
-                        <div>{{ option.save_trm }}개월</div>
-                    {% endfor %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>금융 회사명</th>
+                    <th>상품명</th>
+                    {% comment %} <th>기타 유의사항</th> {% endcomment %}
+                    <th>최고 한도</th>
+                    <th>금리</th>
+                    <th>우대 금리</th>
+                    <th>적립 유형명</th>
+                    <th>저축 기간</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in saving_products %}
+                <tr>
+                    <td>{{ product.kor_co_nm }}</td>
+                    <td><a href="{% url 'finlife:product_detail' 'saving' product.id %}">{{ product.fin_prdt_nm }}</a></td>
+                    {% comment %} <td>{{ product.etc_note }}</td> {% endcomment %}
+                    <td>{{ product.max_limit }}</td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.intr_rate }}%</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.intr_rate2 }}%</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.rsrv_type_nm }}</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.save_trm }}개월</div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock content %}
