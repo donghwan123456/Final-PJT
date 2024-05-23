@@ -1,15 +1,8 @@
 from django import forms
+from django.core.validators import MinValueValidator, MaxValueValidator
 from .models import SurveyResponse
 
 class SurveyForm(forms.ModelForm):
-    AGE_GROUP_CHOICES = [
-        ('10대', '10대'),
-        ('20대', '20대'),
-        ('30~40대', '30~40대'),
-        ('50대', '50대'),
-        ('60세 이상', '60세 이상'),
-    ]
-    
     ASSET_RATIO_CHOICES = [
         ('5% 이하', '5% 이하'),
         ('10% 이하', '10% 이하'),
@@ -20,7 +13,7 @@ class SurveyForm(forms.ModelForm):
 
     EXPECTED_RETURN_CHOICES = [
         ('원금 보존이 무조건!', '원금 보존이 무조건!'),
-        ('예적금 수익률보다 3% 이상 기대 가능하다면 원금보존 가능성이 조금 낮아져도', '예적금 수익률보다 3% 이상 기대 가능하다면 원금보존 가능성이 조금 낮아져도'),
+        ('예적금 수익률보다 3% 이상 기대 가능하다면 원금보존 가능성이 조금 낮아져도 괜찮다', '예적금 수익률보다 3% 이상 기대 가능하다면 원금보존 가능성이 조금 낮아져도 괜찮다'),
         ('High Risk - High Return', 'High Risk - High Return'),
     ]
 
@@ -32,11 +25,15 @@ class SurveyForm(forms.ModelForm):
         ('Master', 'Master'),
     ]
 
-    age_group = forms.ChoiceField(label='고객님의 연령대는 어떻게 되시나요?', choices=AGE_GROUP_CHOICES, widget=forms.RadioSelect)
+    age = forms.IntegerField(
+        label='고객님의 나이는 어떻게 되시나요?',
+        validators=[MinValueValidator(0), MaxValueValidator(120)],
+        widget=forms.NumberInput(attrs={'min': '0', 'max': '120'})
+    )
     asset_ratio = forms.ChoiceField(label='총 자산대비 금융자산의 비중은 어느 정도 입니까?', choices=ASSET_RATIO_CHOICES, widget=forms.RadioSelect)
     expected_return = forms.ChoiceField(label='투자를 통해 기대하는 수익과 감내할 수 있는 손실은 어느 정도 입니까?', choices=EXPECTED_RETURN_CHOICES, widget=forms.RadioSelect)
     financial_knowledge = forms.ChoiceField(label='금융 상품에 대한 본인의 지식수준은 어느정도라고 생각하나요?', choices=FINANCIAL_KNOWLEDGE_CHOICES, widget=forms.RadioSelect)
 
     class Meta:
         model = SurveyResponse
-        fields = ['age_group', 'asset_ratio', 'expected_return', 'financial_knowledge']
+        fields = ['age', 'asset_ratio', 'expected_return', 'financial_knowledge']

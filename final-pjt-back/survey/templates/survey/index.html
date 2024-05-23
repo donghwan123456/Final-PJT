@@ -14,10 +14,12 @@
         <div class="form-group">
             {% for field in form %}
                 <div>
-                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <h3><label for="{{ field.id_for_label }}">{{ field.label }}</label></h3>
                     {{ field }}
                 </div>
+                <br>
             {% endfor %}
+            
         </div>
         <div class="buttons">
             <button class="clear" type="reset">Clear</button>

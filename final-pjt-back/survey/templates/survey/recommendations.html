@@ -9,42 +9,68 @@
 {% block content %}
 <div class="survey-container">
     <h1>추천 예적금 상품</h1>
-    
-    <h2>예금 상품</h2>
-    <ul>
-        {% for product in deposit_products %}
-            <li>
-                <a href="{% url 'finlife:product_detail' 'deposit' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
-                <ul>
-                    {% for option in product.options.all %}
-                        <li>{{option.save_trm}}개월 금리: {{ option.intr_rate }}%</li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
 
     <h2>적금 상품</h2>
-    <ul>
-        {% for product in saving_products %}
-            <li>
-                <a href="{% url 'finlife:product_detail' 'saving' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
-                <ul>
+    {% if saving_products %}
+        <ul>
+            {% for product in saving_products %}
+                <li>
+                    <a href="{% url 'finlife:product_detail' 'saving' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
                     {% for option in product.options.all %}
-                        <li>{{option.save_trm}}개월 금리: {{ option.intr_rate }}%</li>
+                        <div class="option-details">
+                            <div>저축 금리: {{ option.intr_rate }}% - 최고 우대 금리: {{ option.intr_rate2 }}%</div>
+                            <div>저축 기간: {{ option.save_trm }} 개월 - 저축 유형: {{option.rsrv_type_nm}}</div>
+                            
+                        </div>
+                        <br>
                     {% endfor %}
-                </ul>
-            </li>
-        {% endfor %}
-    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-products">추천할 만한 상품이 없습니다</p>
+    {% endif %}
+
+    <h2>예금 상품</h2>
+    {% if deposit_products %}
+        <ul>
+            {% for product in deposit_products %}
+                <li>
+                    <a href="{% url 'finlife:product_detail' 'deposit' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
+                    {% for option in product.options.all %}
+                        <div class="option-details">
+                            <div>저축 금리: {{ option.intr_rate }}% - 최고 우대 금리: {{ option.intr_rate2 }}%</div>
+                            <div>저축 기간: {{ option.save_trm }} 개월</div>
+                        </div>
+                        <br>
+                    {% endfor %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-products">추천할 만한 상품이 없습니다</p>
+    {% endif %}
 
     {% if additional_recommendations %}
-    <h2>추가 추천 상품</h2>
-    <ul>
-        {% for recommendation in additional_recommendations %}
-            <li><a href="{{ recommendation.url }}">{{ recommendation.name }}</a></li>
-        {% endfor %}
-    </ul>
+        <div class="additional-recommendations">
+            <h2>추가 추천 상품</h2>
+            <ul>
+                {% for recommendation in additional_recommendations %}
+                <li>
+                    <a href="{{ recommendation.url }}" target="_blank">
+                        {% if recommendation.name == '금융 투자 협회' %}
+                            <i class="fas fa-university fa-2x"></i>
+                        {% elif recommendation.name == '업비트' %}
+                            <i class="fas fa-chart-line fa-2x"></i>
+                        {% elif recommendation.name == '네이버 증권' %}
+                            <i class="fas fa-chart-bar fa-2x"></i>
+                        {% endif %}
+                        {{ recommendation.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 </div>
 {% endblock %}

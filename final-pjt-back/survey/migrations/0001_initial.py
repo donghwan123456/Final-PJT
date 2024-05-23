@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='SurveyResponse',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('age_group', models.CharField(max_length=50)),
+                ('age', models.IntegerField()),
                 ('asset_ratio', models.CharField(max_length=50)),
                 ('expected_return', models.CharField(max_length=50)),
                 ('financial_knowledge', models.CharField(max_length=50)),
