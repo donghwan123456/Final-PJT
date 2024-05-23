@@ -43,3 +43,4 @@ class SavingOptions(models.Model):
     save_trm = models.IntegerField() # 저축 기간
     rsrv_type = models.TextField() # 적립 유형
     rsrv_type_nm = models.TextField() # 적립 유형명
+

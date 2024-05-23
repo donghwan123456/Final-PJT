@@ -1,19 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <h1>회원정보수정</h1>
-  <form action="{% url "accounts:update" %}" method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <div>
-      <a href="{% url 'accounts:change_password' %}">비밀번호 수정하기</a>
-    </div>
-    <input type="submit">
-  </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% load static %}
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+  <div class="container update-container">
+    <h2>회원정보 수정</h2>
+    <form action="{% url 'accounts:update' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div>
+            <a href="{% url 'accounts:change_password' %}">비밀번호 수정하기</a>
+        </div>
+        <input type="submit" value="수정하기">
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{ product.fin_prdt_nm }} 상세 정보</h1>
+    
+    <p><strong>금융 회사명:</strong> {{ product.kor_co_nm }}</p>
+    <p><strong>상품명:</strong> {{ product.fin_prdt_nm }}</p>
+    <p><strong>기타 유의사항:</strong> {{ product.etc_note }}</p>
+    <p><strong>가입 제한:</strong> {{ product.join_deny }}</p>
+    <p><strong>가입 대상:</strong> {{ product.join_member }}</p>
+    <p><strong>가입 방법:</strong> {{ product.join_way }}</p>
+
+    <h2>우대 조건</h2>
+    <ul>
+        {% for condition in product.spcl_cnd.splitlines %}
+            <li>{{ forloop.counter }}. {{ condition }}</li>
+        {% endfor %}
+    </ul>
+    
+    <p><strong>최고 한도:</strong> {{ product.max_limit }}</p>
+
+    <h2>금리 정보</h2>
+    <ul>
+        {% for option in product.options.all %}
+        <li>{{ option.intr_rate_type_nm }}: {{ option.intr_rate }}% (우대 금리: {{ option.intr_rate2 }}%) - 저축 기간: {{ option.save_trm }}개월{% if option.rsrv_type_nm %} - {{ option.rsrv_type_nm }}{% endif %}</li>
+        {% endfor %}
+    </ul>
+
+    <form method="post" action="{% url 'finlife:enroll_product' product_type product.id %}">
+      {% csrf_token %}
+      {% if enrolled %}
+          <button type="submit">가입해지</button>
+      {% else %}
+          <button type="submit">가입하기</button>
+      {% endif %}
+  </form>
+
+    <a href="{% url 'finlife:index' %}">금융 상품 보기</a>
+    <a href="{% url "accounts:profile" user.username %}}">프로필 페이지</a>
+
+{% endblock content %}

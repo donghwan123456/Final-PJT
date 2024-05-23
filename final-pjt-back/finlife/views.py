@@ -8,16 +8,16 @@ from .serializers import DepositProductsSerializer, DepositOptionsSerializer
 from .models import DepositProducts, DepositOptions
 from .serializers import SavingProductsSerializer, SavingOptionsSerializer
 from .models import SavingProducts, SavingOptions
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 # import pandas as pd
 
 # API_key = settings.FIN_API_KEY
 BASE_URL = 'http://finlife.fss.or.kr/finlifeapi/'
 # Create your views here.
 
-bank_deposit = []
-bank_saving = []
-@api_view(['GET'])
-def index(request): # DB에 저장기능 통합
+@login_required
+def index(request):
     URL_deposit = BASE_URL + 'depositProductsSearch.json'
     URL_saving = BASE_URL + 'savingProductsSearch.json'
     params = {
@@ -110,83 +110,27 @@ def index(request): # DB에 저장기능 통합
                 if option_serializer.is_valid(raise_exception=True):
                     option_serializer.save(product=product)
                 # print('save!!##')
-    
-    for data in baseList_deposit: ## 은행 종류 select바에 넣기
-        if data['kor_co_nm'] not in bank_deposit:
-            bank_deposit.append(data['kor_co_nm'])
-    for data in baseList_saving: ## 은행 종류 select바에 넣기
-        if data['kor_co_nm'] not in bank_saving:
-            bank_saving.append(data['kor_co_nm'])
+
+    bank_deposit = DepositProducts.objects.values_list('kor_co_nm', flat=True).distinct()
+    bank_saving = SavingProducts.objects.values_list('kor_co_nm', flat=True).distinct()
+
+    deposit_products = DepositProducts.objects.all()
+    saving_products = SavingProducts.objects.all()
+
+    selected_bank = request.GET.get('bank')
+    if selected_bank:
+        deposit_products = deposit_products.filter(kor_co_nm=selected_bank)
+        saving_products = saving_products.filter(kor_co_nm=selected_bank)
+
     context = {
         'bank_deposit': bank_deposit,
-        'bank_saving': bank_saving
+        'bank_saving': bank_saving,
+        'deposit_products': deposit_products,
+        'saving_products': saving_products,
+        'selected_bank': selected_bank,
     }
-
     return render(request, 'finlife/index.html', context)
 
-
-@api_view(['GET', 'POST'])
-def deposit_products(request):
-    if request.method == 'GET':
-        depositProducts = DepositProducts.objects.all()
-        serializers = DepositProductsSerializer(depositProducts, many=True)
-        return Response(serializers.data)
-    elif request.method == 'POST':
-        # sample = {
-        #     'fin_prdt_cd': 'TEST001',
-        #     'kor_co_nm': 'SSAFY은행',
-        #     'fin_prdt_nm': '구레잇9기예금',
-        #     'etc_note': '자유',
-        #     'join_deny': 1,
-        #     'join_member': '실명의 개인',
-        #     'join_way': '스마트폰',
-        #     'spcl_cnd': '해당사항 없음'
-        # }
-        serializer = DepositProductsSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-
-            return Response(serializers.data)
-
-
-
-@api_view(['GET'])
-def deposit_product_options(request, fin_prdt_cd):
-
-    depositOptions = DepositOptions.objects.filter(fin_prdt_cd=fin_prdt_cd)
-    serializers = DepositOptionsSerializer(depositOptions, many=True)
-    return Response(serializers.data)
-
-
-
-@api_view(['GET'])
-def top_rate(request):
-    depositOptions = DepositOptions.objects.order_by('intr_rate2').first()
-    serializers_option = DepositOptionsSerializer(depositOptions)
-
-    product = DepositProducts.objects.get(pk=depositOptions.product.pk)
-    # print(product)
-    serializers_product = DepositProductsSerializer(product)
-    return Response({'deposit_products':serializers_product.data, 'options':[serializers_option.data]})
-
-@api_view(['GET'])
-def sort_rate(request):
-    # intr_rate2 필드를 기준으로 DepositOptions를 정렬
-    deposit_options = DepositOptions.objects.all().order_by('intr_rate2')
-    serializers_option = DepositOptionsSerializer(deposit_options, many=True)
-
-    # 정렬된 DepositOptions 중 각각에 해당하는 DepositProducts를 가져와서 직렬화
-    products = [option.product for option in deposit_options]
-    serializers_product = DepositProductsSerializer(products, many=True)
-
-
-    # DepositProducts와 DepositOptions를 번갈아가며 출력
-    output_data = []
-    for product, option in zip(serializers_product.data, serializers_option.data):
-        output_data.append(product)
-        output_data.append(option)
-
-    return Response({'data': output_data})
 
 
 @api_view(['GET'])
@@ -229,3 +173,51 @@ def filter(request):
     }
     # print(option_data[0])
     return render(request, 'finlife/filter.html', context)
+
+def compare_products(request):
+    deposit_product_ids = request.GET.getlist('deposit_products')
+    saving_product_ids = request.GET.getlist('saving_products')
+    
+    deposit_products = DepositProducts.objects.filter(id__in=deposit_product_ids)
+    saving_products = SavingProducts.objects.filter(id__in=saving_product_ids)
+
+    context = {
+        'deposit_products': deposit_products,
+        'saving_products': saving_products,
+    }
+
+    return render(request, 'finlife/compare.html', context)
+
+@login_required
+def product_detail(request, product_type, product_id):
+    if product_type == 'deposit':
+        product = get_object_or_404(DepositProducts, id=product_id)
+        enrolled = product in request.user.enrolled_deposit_products.all()
+    else:
+        product = get_object_or_404(SavingProducts, id=product_id)
+        enrolled = product in request.user.enrolled_saving_products.all()
+
+    context = {
+        'product': product,
+        'product_type': product_type,
+        'enrolled': enrolled,
+    }
+    return render(request, 'finlife/detail.html', context)
+
+@login_required
+def enroll_product(request, product_type, product_id):
+    if product_type == 'deposit':
+        product = get_object_or_404(DepositProducts, id=product_id)
+        if product in request.user.enrolled_deposit_products.all():
+            request.user.enrolled_deposit_products.remove(product)
+        else:
+            request.user.enrolled_deposit_products.add(product)
+    else:
+        product = get_object_or_404(SavingProducts, id=product_id)
+        if product in request.user.enrolled_saving_products.all():
+            request.user.enrolled_saving_products.remove(product)
+        else:
+            request.user.enrolled_saving_products.add(product)
+    request.user.save()
+
+    return redirect('accounts:profile', username=request.user.username)

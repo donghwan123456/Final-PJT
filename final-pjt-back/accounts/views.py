@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import update_session_auth_hash
@@ -6,6 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import get_user_model
 from .forms import CustomUserChangeForm, CustomUserCreationForm
+from finlife.models import DepositProducts, SavingProducts
+
 # from .forms import UserForm
 
 
@@ -88,27 +90,30 @@ def change_password(request):
     return render(request, 'accounts/change_password.html', context)
 
 
+@login_required
 def profile(request, username):
     User = get_user_model()
-    person = User.objects.get(username=username)
+    person = get_object_or_404(User, username=username)
+    enrolled_deposit_products = person.enrolled_deposit_products.all()
+    enrolled_saving_products = person.enrolled_saving_products.all()
+    
     context = {
         'person': person,
+        'enrolled_deposit_products': enrolled_deposit_products,
+        'enrolled_saving_products': enrolled_saving_products,
     }
     return render(request, 'accounts/profile.html', context)
 
-
 @login_required
-def follow(request, user_pk):
-    me = request.user
-    you = get_user_model().objects.get(pk=user_pk)
+def compare_products(request):
+    deposit_product_ids = request.POST.getlist('deposit_products')
+    saving_product_ids = request.POST.getlist('saving_products')
 
-    # 자기 자신을 팔로우 할 수 없음
-    if me != you:
-        # 요청하는 사람이 상대방의 팔로워 목록에 있는지 없는지
-        if me in you.followers.all():
-            you.followers.remove(me)
-            # me.followings.remove(you)
-        else:
-            you.followers.add(me)
-            # me.followings.add(you)
-    return redirect('accounts:profile', you.username)
+    deposit_products = DepositProducts.objects.filter(id__in=deposit_product_ids)
+    saving_products = SavingProducts.objects.filter(id__in=saving_product_ids)
+
+    context = {
+        'deposit_products': deposit_products,
+        'saving_products': saving_products,
+    }
+    return render(request, 'accounts/compare.html', context)
