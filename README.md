@@ -67,7 +67,7 @@ o&logoColor=black"/>
 
 
 
-![로고](ERD (1).PNG)
+![로고](ERD%20(1).PNG)
 
 ## 주요 기능 정의서
 | Depth 1  | Depth 2 | 내용 |
