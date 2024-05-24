@@ -58,12 +58,12 @@ o&logoColor=black"/>
 - 김지환 : 팀원 : 회원가입, 로그인, 로그아웃, 게시판, 예적금 금리비교, 투자 성향 설문조사 데이터 저장, 맞춤 상품 추천
 <br>
 ## 타임라인 및 진행 상황
-![로고](timeline.png)
+![로고](timeline.PNG)
 
 ## ERD
 
 
-![로고](ERD.png)
+![로고](ERD(1).PNG)
 
 ## 주요 기능 정의서
 | Depth 1  | Depth 2 | 내용 |
