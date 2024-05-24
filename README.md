@@ -65,9 +65,7 @@ o&logoColor=black"/>
 
 ## ERD
 
-
-
-![로고](ERD%20(1).PNG)
+![ERD](https://github.com/donghwan123456/Final-PJT/assets/156268564/783731ba-4cdd-4225-95b0-9897ae70baff)
 
 ## 주요 기능 정의서
 | Depth 1  | Depth 2 | 내용 |
