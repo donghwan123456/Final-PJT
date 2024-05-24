@@ -59,9 +59,7 @@ o&logoColor=black"/>
 <br>
 ## 타임라인 및 진행 상황
 
-
-![로고](![ERD](https://github.com/donghwan123456/Final-PJT/assets/156268564/1d3a96c0-d452-48a3-81cd-5e9836ac4e5f)
-)
+![timeline](https://github.com/donghwan123456/Final-PJT/assets/156268564/de1e0c37-0b08-4911-bdd5-eb240e6860b8)
 
 ## ERD
 
