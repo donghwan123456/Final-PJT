@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'finlife.css' %}">
+{% endblock style %}
+
+{% block content %}
+<div class="container">
+    <h1>금융 상품 비교</h1>
+    
+    <h2>예금 상품</h2>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>금융 회사명</th>
+                    <th>상품명</th>
+                    <th>기타 유의사항</th>
+                    <th>최고 한도</th>
+                    <th>금리</th>
+                    <th>우대 금리</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in deposit_products %}
+                <tr>
+                    <td>{{ product.kor_co_nm }}</td>
+                    <td>{{ product.fin_prdt_nm }}</td>
+                    <td>{{ product.etc_note }}</td>
+                    <td>{{ product.max_limit }}</td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.intr_rate }}%</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.intr_rate2 }}%</div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <h2>적금 상품</h2>
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>금융 회사명</th>
+                    <th>상품명</th>
+                    <th>기타 유의사항</th>
+                    <th>최고 한도</th>
+                    <th>금리</th>
+                    <th>우대 금리</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in saving_products %}
+                <tr>
+                    <td>{{ product.kor_co_nm }}</td>
+                    <td>{{ product.fin_prdt_nm }}</td>
+                    <td>{{ product.etc_note }}</td>
+                    <td>{{ product.max_limit }}</td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.intr_rate }}%</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for option in product.options.all %}
+                            <div>{{ option.intr_rate2 }}%</div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

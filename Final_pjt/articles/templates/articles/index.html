@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block style %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'articles.css' %}">
+{% endblock style %}
+
+{% block content %}
+<div class="container table-container">
+    <h2>게시판</h2>
+    <table class="table" id="postsTable">
+        <tr class="header">
+            <th class="num">번호</th>
+            <th class="title">제목</th>
+            <th class="author">작성자</th>
+            <th class="date">등록일</th>
+        </tr>
+        {% for article in page_obj %}
+        <tr class="body">
+            <td class="num">{{ article.pk }}</td>
+            <td class="title">
+                <a href="{% url 'articles:detail' article.pk %}">{{ article.title }}</a>
+            </td>
+            <td class="author">{{ article.user }}</td>
+            <td class="date">{{ article.created_at|date:"Y-m-d" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; 처음</a>
+            <a href="?page={{ page_obj.previous_page_number }}">&lsaquo; 이전</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="current">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-5' and num < page_obj.number|add:'5' %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">다음 &rsaquo;</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">끝 &raquo;</a>
+        {% endif %}
+    </div>
+
+    <button onclick="redirectToIndex()">글 작성하기</button>
+</div>
+
+<script>
+    function redirectToIndex() {
+        window.location.href = "{% url 'articles:create' %}";
+    }
+</script>
+{% endblock content %}

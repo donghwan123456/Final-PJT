@@ -1,0 +1,91 @@
+/* 프로필 페이지 스타일 */
+.profile-container {
+  width: 80%;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.profile-container h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #0056b3;
+}
+
+.profile-info {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.profile-info p {
+  margin: 10px 0;
+  font-size: 1.1em;
+}
+
+.profile-info a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.profile-info a:hover {
+  text-decoration: underline;
+}
+
+.product-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.product-list li {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+
+.product-list li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.product-list li a:hover {
+  color: #0056b3;
+}
+
+.compare-button {
+  background: #0056b3;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.compare-button:hover {
+  background: #004494;
+}
+
+.link-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.custom-link {
+  background: #0056b3;
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  width: 48%;
+}
+
+.custom-link:hover {
+  background: #004494;
+}

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% load humanize %}
+{% load static %}
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static 'accounts.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+  <div class="container profile-container">
+    <h1>{{ person.username }}님의 프로필 페이지</h1>
+    <div class="profile-info">
+        <p>이름: {{ person.username }}</p>
+        <p>주소: {{ person.address }}</p>
+        <p>생일: {{ person.birthday|date:"Y-m-d" }}</p>
+        <p>보유자산: {{ person.assets|intcomma }}원</p>
+        <p>목표금액: {{ person.Goal|intcomma }}원</p>
+        <a href="{% url 'accounts:update' %}">회원정보 수정하기</a>
+    </div>
+    <hr>
+    <form method="post" action="{% url 'accounts:compare_products' %}">
+        {% csrf_token %}
+        <h3>가입한 예금 상품</h3>
+        <ul class="product-list">
+            {% for product in enrolled_deposit_products %}
+            <li>
+                <input type="checkbox" name="deposit_products" value="{{ product.id }}">
+                <a href="{% url 'finlife:product_detail' 'deposit' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        
+        <h3>가입한 적금 상품</h3>
+        <ul class="product-list">
+            {% for product in enrolled_saving_products %}
+            <li>
+                <input type="checkbox" name="saving_products" value="{{ product.id }}">
+                <a href="{% url 'finlife:product_detail' 'saving' product.id %}">{{ product.kor_co_nm }} - {{ product.fin_prdt_nm }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        <br>
+        <button type="submit" class="compare-button">비교하기</button>
+    </form>
+    <div class="link-container">
+        <a href="{% url 'survey:recommendations' %}" class="custom-link">금융 상품 추천받기</a> 
+        <a href="{% url 'articles:index' %}" class="custom-link">되돌아가기</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

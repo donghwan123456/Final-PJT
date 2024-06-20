@@ -1,0 +1,158 @@
+/* 공통 스타일 */
+html, body {
+padding: 0;
+margin: 0;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background-color: #f4f4f9;
+color: #333;
+}
+
+/* 메인 컨테이너 스타일 */
+.main-container {
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+}
+
+.container {
+width: 90%;
+max-width: 600px;
+background: #fff;
+padding: 30px;
+box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+border-radius: 10px;
+}
+
+h2, h1 {
+font-size: 2em;
+margin-bottom: 20px;
+color: #007BFF;
+text-align: center;
+}
+
+form {
+background: #f8f9fa;
+padding: 20px;
+border-radius: 5px;
+margin-bottom: 20px;
+}
+
+form p {
+margin: 15px 0;
+font-size: 1.1em;
+}
+
+form label {
+display: block;
+margin-bottom: 5px;
+font-weight: bold;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form input[type="date"] {
+width: 100%;
+padding: 10px;
+margin-bottom: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+}
+
+form input[type="submit"] {
+width: 100%;
+background: #007BFF;
+color: #fff;
+border: none;
+padding: 15px;
+font-size: 1em;
+cursor: pointer;
+border-radius: 5px;
+margin-top: 20px;
+}
+
+form input[type="submit"]:hover {
+background: #0056b3;
+}
+
+a {
+color: #007BFF;
+text-decoration: none;
+margin-top: 10px;
+display: inline-block;
+}
+
+a:hover {
+text-decoration: underline;
+}
+
+.profile-info p {
+margin: 10px 0;
+font-size: 1.1em;
+}
+
+.profile-info a {
+color: #007BFF;
+text-decoration: none;
+}
+
+.profile-info a:hover {
+text-decoration: underline;
+}
+
+.product-list {
+list-style-type: none;
+padding: 0;
+}
+
+.product-list li {
+margin-bottom: 10px;
+padding: 10px;
+background: #f8f9fa;
+border-radius: 5px;
+}
+
+.product-list li a {
+text-decoration: none;
+color: #333;
+font-weight: bold;
+}
+
+.product-list li a:hover {
+color: #007BFF;
+}
+
+.compare-button {
+background: #007BFF;
+color: #fff;
+border: none;
+padding: 10px 20px;
+font-size: 1em;
+cursor: pointer;
+border-radius: 5px;
+}
+
+.compare-button:hover {
+background: #0056b3;
+}
+
+.link-container {
+display: flex;
+justify-content: space-between;
+margin-top: 20px;
+}
+
+.custom-link {
+background: #007BFF;
+color: #fff;
+padding: 10px 20px;
+text-decoration: none;
+border-radius: 5px;
+text-align: center;
+width: 48%;
+}
+
+.custom-link:hover {
+background: #0056b3;
+}

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block style %}
+<title>MONIMATE</title>
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css"> <!-- Swiper CSS -->
+<link rel="stylesheet" href="../static/new.css"> <!-- Custom CSS -->
+{% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"> <!-- Font Awesome 아이콘 --> {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@1.34.1/dist/tsparticles.min.js"></script> <!-- tsParticles JS -->
+{% endblock style %}
+
+
+{% block content %}
+    
+    <div id="tsparticles"></div>
+    <section>
+      <div class="content">
+        <h1>MONIMATE는</h1>
+        <h1>쉽고 정확하게 !!</h1>
+        <p>
+          <a href="http://127.0.0.1:5500/%ED%99%88%ED%8E%98%EC%9D%B4%EC%A7%80%20%ED%9B%84%EB%B3%B4/" class="custom-link">MONIMATE 홈페이지 바로가기</a>
+        </p>
+        <a href="{% url "finlife:index" %}"><button>나에게 맞는 상품 바로 찾기</button></a>
+      </div>
+
+      <div class="swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <a href="{% url 'exchange_app:home' %}" style="display: block;">
+              <img src="../static/image2.png" alt="exchange" />   
+            </a>
+            <div class="cost">무료 이벤트</div>
+            <div class="overlay">
+              <h1>환율 계산기</h1>
+              <p>
+                빠르고 정확하게 환율 정보를 제공해드립니다.
+              </p>
+              <p></p>  
+                주변 은행 찾기로 어디서 환전해야 할지도!!
+              </p>
+              <div class="ratings">
+                <div class="stars">
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star-half-alt star"></i>
+                </div>
+                <span>138 reviews</span>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <a href="{% url 'survey:recommendations' %}">
+            <img src="../static/image3.png" alt="AI_image" />
+            </a>
+            <div class="cost">무료 이벤트</div>
+            <div class="overlay">
+              <h1>AI 상품 추천</h1>
+              <p>
+                간단한 설문조사만 마치면
+              </p>
+              <p>  
+                나에게 딱 맞는 금융상품 추천을 순식간에 !
+              </p>
+              <div class="ratings">
+                <div class="stars">
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                </div>
+                <span>307 reviews</span>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <a href="{% url 'myapp:map' %}">
+            <img src="../static/image4.png" alt="bank_map" />
+            </a>
+            <div class="cost dark-text">무료 이벤트</div>
+            <div class="overlay">
+              <h1>주변 은행찾기</h1>
+              <p>
+                환전이나 상담을 위해 은행을 가야할 때 !
+              </p>
+              <p>
+                주변에 은행이 어딨지?
+              </p>
+              <div class="ratings">
+                <div class="stars">
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star-half-alt star"></i>
+                </div>
+                <span>리뷰가 있을까?</span>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <a href="{% url 'finlife:index' %}">
+            <img src="../static/image1.png" alt="monimate_logo" />
+            </a>
+            <div class="cost dark-text">무료 이벤트</div>
+            <div class="overlay">
+              <h1>금융 상품 비교</h1>
+              <p>
+                시중은행의 모든 상품 중
+              </p>
+              <p>
+                조건에 맞는 것만 보여드려요!
+              </p>
+              <div class="ratings">
+                <div class="stars">
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star"></i>
+                  <i class="fa fa-star star-outline"></i>
+                </div>
+                <span>619 reviews</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script> <!-- Swiper JS -->
+    <script src="../static/new.js"></script> <!-- Custom JS -->
+{% endblock  %}
+

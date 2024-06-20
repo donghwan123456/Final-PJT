@@ -1,0 +1,211 @@
+/* 전체 페이지 기본 스타일 */
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* 지도 컨테이너 스타일 */
+#map {
+    width: 100%;
+    height: 80vh; /* 뷰포트 높이의 80%를 차지 */
+}
+
+/* 검색 폼 및 결과 목록 컨테이너 */
+#menu_wrap {
+    background: white;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: 8px;
+    width: 300px;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+    z-index: 5;
+}
+
+/* 검색 폼 스타일 */
+form {
+    margin-bottom: 10px;
+}
+
+input[type="text"] {
+    width: calc(100% - 85px);
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    width: 70px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* 검색 결과 목록 스타일 */
+#placesList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow: auto;
+    max-height: 300px;
+}
+
+#placesList li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+#placesList li:last-child {
+    border-bottom: none;
+}
+
+.info {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 페이지네이션 스타일 */
+#pagination {
+    text-align: center;
+    margin-top: 10px;
+}
+
+#pagination a {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+/* 사이드바 및 메뉴 스타일 */
+.main-menu {
+    background: #212121;
+    border-right: 1px solid #e5e5e5;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+    left: 0;
+    width: 60px;
+    overflow: hidden;
+    transition: width.05s linear;
+    transform: translateZ(0) scale(1,1);
+    z-index: 1000;
+}
+
+.main-menu > ul {
+    margin: 7px 0;
+}
+
+.main-menu li {
+    position: relative;
+    display: block;
+    width: 250px;
+}
+
+.main-menu li > a {
+    position: relative;
+    display: table;
+    border-collapse: collapse;
+    border-spacing: 0;
+    color: #999;
+    font-family: Arial;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all.1s linear;
+}
+
+.main-menu.nav-icon {
+    position: relative;
+    display: table-cell;
+    width: 60px;
+    height: 36px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 18px;
+}
+
+.main-menu.nav-text {
+    position: relative;
+    display: table-cell;
+    vertical-align: middle;
+    width: 190px;
+    font-family: 'Titillium Web', sans-serif;
+}
+
+.main-menu > ul.logout {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.no-touch.scrollable.hover {
+    overflow-y: hidden;
+}
+
+.no-touch.scrollable.hover:hover {
+    overflow-y: auto;
+    overflow: visible;
+}
+
+a:hover, a:focus {
+    text-decoration: none;
+}
+
+nav {
+    user-select: none;
+}
+
+nav ul, nav li {
+    outline: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.main-menu li:hover > a, nav.main-menu li.active > a,.dropdown-menu > li > a:hover,.dropdown-menu > li > a:focus,.dropdown-menu >.active > a,.dropdown-menu >.active > a:hover,.dropdown-menu >.active > a:focus,.no-touch.dashboard-page nav.dashboard-menu ul li:hover a,.dashboard-page nav.dashboard-menu ul li.active a {
+    color: #fff;
+    background-color: #000000;
+}
+
+.area {
+    float: left;
+    background: #e2e2e2;
+    width: 100%;
+    height: 100%;
+}
+
+@font-face {
+    font-family: 'Titillium Web';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Titillium Web Light'), local('TitilliumWeb-Light'), url(http://themes.googleusercontent.com/static/fonts/titilliumweb/v2/anMUvcNT0H1YN4FII8wpr24bNCNEoFTpS2BTjF6FB5E.woff) format('woff');
+}
+
+.fa-2x {
+    font-size: 2em;
+}
+
+.fa {
+    position: relative;
+    display: table-cell;
+    width: 60px;
+    height: 36px;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 20px;
+}
+
+.main-menu:hover, nav.main-menu.expanded {
+    width: 250px;
+    overflow: visible;
+}
